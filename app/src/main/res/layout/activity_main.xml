@@ -8,98 +8,138 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/run"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="実行" />
+
+                <Button
+                    android:id="@+id/reset"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="リセット" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner"
                 android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center|bottom"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
             <Button
+                android:id="@+id/connect"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:onClick="btn"
                 android:text="接続"
-                android:textSize="25dp"
-                android:onClick="btn"
-                android:id="@+id/connect" />
+                android:textSize="25dp" />
+
             <Button
+                android:id="@+id/front"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:onClick="btn"
                 android:text="前進"
-                android:onClick="btn"
-                android:textSize="25dp"
-                android:id="@+id/front" />
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:text="テスト"
-                android:onClick="btn"
-                android:id="@+id/test"
-                />
+                android:textSize="25dp" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <Button
+                android:id="@+id/left"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_above="@id/back"
+                android:layout_toLeftOf="@id/back"
+                android:onClick="btn"
                 android:text="左回転"
-                android:onClick="btn"
-                android:textSize="25dp"
-                android:id="@+id/left" />
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:text="停止"
-                android:textSize="25dp"
+                android:textSize="25dp" />
 
-                android:onClick="btn"
-                android:id="@+id/stop" />
+
             <Button
+                android:id="@+id/right"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:text="右回転"
-                android:textSize="25dp"
+                android:layout_above="@id/back"
+                android:layout_toRightOf="@+id/back"
                 android:onClick="btn"
-                android:id="@+id/right" />
+                android:text="右回転"
+                android:textSize="25dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center|top"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:weightSum="1">
+
             <Button
+                android:id="@+id/back"
                 android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:text="後退"
-                android:textSize="25dp"
+                android:layout_height="102dp"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="0.04"
                 android:onClick="btn"
-                android:id="@+id/back" />
+                android:text="後退"
+                android:textSize="25dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
