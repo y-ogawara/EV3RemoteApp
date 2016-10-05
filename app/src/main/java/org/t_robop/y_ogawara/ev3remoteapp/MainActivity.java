@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     int LEFT = 4;
     int TEST = 5;
 
-
     //00:16:53:44:69:AB   ev3 青
     //00:16:53:44:59:C0   ev3 緑
     //00:16:53:43:DE:A0   ev3 灰色
