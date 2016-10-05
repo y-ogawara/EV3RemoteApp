@@ -17,14 +17,17 @@ public class debugIntentActivity extends AppCompatActivity {
         switch (String.valueOf(v.getTag())) {
             case "debug1":
                 intent.setClass(this,MainActivity.class);
+                startActivity(intent);
             break;
 
             case "debug2":
                 intent.setClass(this,MainActivity.class);
+                startActivity(intent);
                 break;
 
             case "debug3":
-                intent.setClass(this,MainActivity.class);
+                intent.setClass(this,RunListActivity.class);
+                startActivity(intent);
                 break;
         }
     }

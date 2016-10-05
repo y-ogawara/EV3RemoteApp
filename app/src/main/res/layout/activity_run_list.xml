@@ -10,4 +10,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.t_robop.y_ogawara.ev3remoteapp.RunListActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_run"
+            android:layout_weight="1">
+        </ListView>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_mae"
+            android:layout_weight="1"
+            android:onClick="zensin"/>
+
+    </LinearLayout>
+
 </RelativeLayout>
