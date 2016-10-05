@@ -29,7 +29,7 @@ public class ButtonActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // OK ボタンクリック処理
-                        txt1.setText("fuck");
+                        txt1.setText("あああ");
                     }
                 });
         alertDlg.setNegativeButton(
@@ -37,7 +37,7 @@ public class ButtonActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Cancel ボタンクリック処理
-                        txt1.setText("mother fucker");
+                        txt1.setText("ぽやしみ。");
                     }
                 });
 
