@@ -171,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
                 sendBluetooth(1);
                 break;
             //止まるとき
-            case R.id.stop:
-                sendBluetooth(0);
-                break;
+            //case R.id.stop:
+                //sendBluetooth(0);
+                //break;
             //左回転するとき
             case R.id.left:
                 sendBluetooth(4);
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 connection();
                 break;
             //テストボタンをおした時
-            case R.id.test:
+           // case R.id.test:
                 sendBluetooth(FRONT);
                 time(2);
                 sendBluetooth(RIGHT);
