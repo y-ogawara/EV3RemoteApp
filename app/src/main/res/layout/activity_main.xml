@@ -1,139 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="35"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            android:orientation="vertical">
+            android:background="#5ff">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/run"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="実行" />
-
-                <Button
-                    android:id="@+id/reset"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="リセット" />
-            </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:orientation="vertical"
+            android:background="#f34"></LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="7"
+        android:layout_weight="65"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|bottom"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/connect"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="btn"
-                android:text="接続"
-                android:textSize="25dp" />
-
-            <Button
-                android:id="@+id/front"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:onClick="btn"
-                android:text="前進"
-                android:textSize="25dp" />
+            android:layout_weight="85"
+            android:background="#f99">
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="btn"
-                android:text="左回転"
-                android:textSize="25dp" />
-
-            <Button
-                android:id="@+id/right"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="btn"
-                android:text="右回転"
-                android:textSize="25dp" />
+            android:layout_weight="15"
+            android:orientation="vertical"
+            android:background="#56f">
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <Button
-                android:id="@+id/back"
-                android:layout_width="100dp"
-                android:layout_height="102dp"
-                android:layout_centerHorizontal="true"
-                android:layout_weight="0.04"
-                android:onClick="btn"
-                android:text="後退"
-                android:textSize="25dp" />
-        </LinearLayout>
     </LinearLayout>
+
+
 </LinearLayout>
