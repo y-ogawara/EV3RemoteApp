@@ -107,7 +107,7 @@
                 android:onClick="btn"
                 android:text="左回転"
                 android:textSize="25dp" />
-            
+
             <Button
                 android:id="@+id/right"
                 android:layout_width="100dp"
