@@ -26,6 +26,9 @@ public class RunListActivity extends AppCompatActivity {
 
     AlertDialog.Builder alertDlg;
 
+
+    AlertDialog.Builder alll;
+
     View inputView;
 
     EditText dialogEdit;
@@ -66,6 +69,9 @@ public class RunListActivity extends AppCompatActivity {
 
             }
         });
+
+
+        num=0;
     }
 
     //前進ボタン押したー
@@ -85,10 +91,13 @@ public class RunListActivity extends AppCompatActivity {
 
     }
 
+    int num;
     //ダイアログ生成メソッド
     public void setDialog(String title){
 
-        dialogText.setText(title);
+        num++;
+
+        dialogText.setText(title+String.valueOf(num));
 
         if(alertDlg==null) {
 
@@ -114,8 +123,56 @@ public class RunListActivity extends AppCompatActivity {
                             // Cancel ボタンクリック処理
                         }
                     });
-            alertDlg.create();
+            alertDlg.create().show();
         }
+        else {
+            alll = new AlertDialog.Builder(this)
+                    .setView(inputView)
+                    .setPositiveButton(
+                            "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // OK ボタンクリック処理
+
+                                    //入力されたText取得
+                                    int second=Integer.parseInt(dialogEdit.getText().toString());
+
+                                    //アダプター追加からのセット
+                                    addAdapter(dialogText.getText().toString(),second);
+                                }
+                            })
+                    .setNegativeButton(
+                            "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Cancel ボタンクリック処理
+                                }
+                            });
+            alll.create().show();
+
+        }
+        alll = new AlertDialog.Builder(this)
+                .setView(inputView)
+                .setPositiveButton(
+                        "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK ボタンクリック処理
+
+                                //入力されたText取得
+                                int second=Integer.parseInt(dialogEdit.getText().toString());
+
+                                //アダプター追加からのセット
+                                addAdapter(dialogText.getText().toString(),second);
+                            }
+                        })
+                .setNegativeButton(
+                        "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Cancel ボタンクリック処理
+                            }
+                        });
         alertDlg.show();
 
     }
