@@ -27,7 +27,7 @@ public class RunListActivity extends AppCompatActivity {
         //関連付け
         listRun=(ListView)findViewById(R.id.list_run);
         //アダプターの初期化
-        adapterRun=new ArrayAdapter<>(this, R.layout.run_list_item);
+        adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         // アイテムクリック時ののイベントを追加
         listRun.setOnItemClickListener(new AdapterView.OnItemClickListener() {
