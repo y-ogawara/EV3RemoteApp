@@ -24,10 +24,7 @@ public class RunListActivity extends AppCompatActivity {
     //テスト用前進ボタン
     Button btnMae;
 
-    AlertDialog.Builder alertDlg;
-
-
-    AlertDialog.Builder alll;
+    AlertDialog alertDlg;
 
     View inputView;
 
@@ -64,24 +61,32 @@ public class RunListActivity extends AppCompatActivity {
 
                 Toast.makeText(RunListActivity.this, item, Toast.LENGTH_SHORT).show();
 
+                //listから数値のみ取得してダイアログ内のedittextに貼る
+                int ret = Integer.parseInt(item.substring(4-1).replaceAll("[^0-9]",""));
+                dialogEdit.setText(String.valueOf(ret));
 
                 //ここで編集用ダイアログ出す
+                showDialog(item.substring(0,2));//現在のリストの場所+1,先頭二文字
 
             }
         });
 
+        //初回ダイアログセット
+        setDialog();
 
-        num=0;
     }
 
     //前進ボタン押したー
     public void zensin(View v){
 
-        setDialog("前進");
+        //ダイアログ内のedittextクリーン
+        resetEdit(dialogEdit,dialogText);
 
+        //ダイアログ表示
+        showDialog("前進");
     }
 
-    //アダプター追加処理
+    //アダプター追加処理(入力した文字列と入力された秒数を一緒に追加すっぞ)
     public void addAdapter(String action,int second){
 
         //アダプターに追加
@@ -91,17 +96,12 @@ public class RunListActivity extends AppCompatActivity {
 
     }
 
-    int num;
-    //ダイアログ生成メソッド
-    public void setDialog(String title){
-
-        num++;
-
-        dialogText.setText(title+String.valueOf(num));
+    //ダイアログ生成メソッド(起動時に呼んであげて)
+    public void setDialog(){
 
         if(alertDlg==null) {
 
-            alertDlg = new AlertDialog.Builder(this)
+            alertDlg = new AlertDialog.Builder(RunListActivity.this)
             .setView(inputView)
             .setPositiveButton(
                     "OK",
@@ -122,58 +122,26 @@ public class RunListActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // Cancel ボタンクリック処理
                         }
-                    });
-            alertDlg.create().show();
+                    })
+            .create();
         }
-        else {
-            alll = new AlertDialog.Builder(this)
-                    .setView(inputView)
-                    .setPositiveButton(
-                            "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // OK ボタンクリック処理
+    }
 
-                                    //入力されたText取得
-                                    int second=Integer.parseInt(dialogEdit.getText().toString());
+    public void showDialog(String title){
 
-                                    //アダプター追加からのセット
-                                    addAdapter(dialogText.getText().toString(),second);
-                                }
-                            })
-                    .setNegativeButton(
-                            "Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Cancel ボタンクリック処理
-                                }
-                            });
-            alll.create().show();
+        dialogText.setText(title);
 
-        }
-        alll = new AlertDialog.Builder(this)
-                .setView(inputView)
-                .setPositiveButton(
-                        "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // OK ボタンクリック処理
-
-                                //入力されたText取得
-                                int second=Integer.parseInt(dialogEdit.getText().toString());
-
-                                //アダプター追加からのセット
-                                addAdapter(dialogText.getText().toString(),second);
-                            }
-                        })
-                .setNegativeButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Cancel ボタンクリック処理
-                            }
-                        });
         alertDlg.show();
+
+    }
+
+    /**新規追加用に一度edittextをクリーンできるメソッド**/
+    public void resetEdit(EditText edit,TextView view){
+
+        //edittextの内容を削除
+        edit.getEditableText().clear();
+        //textView(edittext以外のView)にフォーカスを移す
+        view.requestFocus();
 
     }
 }
