@@ -21,7 +21,7 @@ public class debugIntentActivity extends AppCompatActivity {
             break;
 
             case "debug2":
-                intent.setClass(this,MainActivity.class);
+                intent.setClass(this,ButtonActivity.class);
                 startActivity(intent);
                 break;
 
