@@ -2,28 +2,20 @@ package org.t_robop.y_ogawara.ev3remoteapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.os.Vibrator;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import static org.t_robop.y_ogawara.ev3remoteapp.R.id.stop;
+import ev3command.ev3.comm.AndroidComm;
+import ev3command.ev3.comm.EV3Command;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,7 +120,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //接続ボタン処理
-    public void connect(View v){
+    public void connect(View v) {
+        BluetoothAdapter mBtAdapter = null;
+
+// — —-
+
+// Get default adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+// — —-
+
+        //00:16:53:44:69:AB   ev3 青
+        //00:16:53:44:59:C0   ev3 緑
+        //00:16:53:43:DE:A0   ev3 灰色
+
+// Get the device MAC address
+         String address = "00:16:53:44:69:AB";
+// Get the BluetoothDevice object
+        BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
+
+        AndroidComm.getInstance().setDevice(device); // Set device
+
+// Connect to EV3
+        try {
+            EV3Command.open();
+        } catch (Exception e) {
+            // This exception also occurs when this device hasn’t
+            // finished paring
+        }
+
 
     }
 }
+
