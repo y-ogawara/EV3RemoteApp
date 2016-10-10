@@ -161,15 +161,6 @@
                         android:text="左回転"
                         android:textSize="25dp" />
                 </LinearLayout>
-            <Button
-                android:id="@+id/left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_above="@+id/back"
-                android:layout_toLeftOf="@+id/back"
-                android:onClick="btn"
-                android:text="左回転"
-                android:textSize="25dp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -195,17 +186,6 @@
                         android:textSize="25dp" />
                 </LinearLayout>
             </LinearLayout>
-            <Button
-                android:id="@+id/right"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_above="@+id/back"
-                android:layout_toRightOf="@+id/back"
-                android:onClick="btn"
-                android:text="右回転"
-                android:textSize="25dp" />
-
-        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

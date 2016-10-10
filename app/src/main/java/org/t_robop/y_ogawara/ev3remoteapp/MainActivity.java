@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(stop);
+        Button stopBtn =(Button)findViewById(R.id.stop);
         runBtn.setVisibility(View.VISIBLE);
         stopBtn.setVisibility(View.INVISIBLE);
     }
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     //命令ボタン処理
     public void command(View v){
         Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(stop);
+        Button stopBtn =(Button)findViewById(R.id.stop);
         switch (String.valueOf(v.getTag())){
             case "run":
                 runBtn.setVisibility(View.INVISIBLE);
