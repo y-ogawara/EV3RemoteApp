@@ -57,7 +57,7 @@ public class ButtonActivity extends AppCompatActivity {
                 str2 = "右折";
                 break;
             case R.id.button7:
-                str2 = "前進";
+                str2 = "後退";
                 break;
             default:
                 break;
@@ -67,7 +67,7 @@ public class ButtonActivity extends AppCompatActivity {
         //ダイアログのタイトル
         alertDlg.setTitle(str2);
         final NumberPicker np1 = new NumberPicker(ButtonActivity.this);                     //ダイアログ中の数字ロール生成
-        np1.setMaxValue(9);                                                                //上限設定
+        np1.setMaxValue(10);                                                                //上限設定
         np1.setMinValue(1);                                                                 //下限設定
         //ナンバーピッカーの初期位置を指定できる
         //np1.setValue(0);
