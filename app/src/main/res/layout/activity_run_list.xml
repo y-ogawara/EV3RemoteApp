@@ -48,6 +48,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/btn_test"
+                android:onClick="test"
+                android:text="kie"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:id="@+id/btn_born"
                 android:onClick="reborn"
                 android:text="復活のL"/>
