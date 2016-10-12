@@ -1,6 +1,8 @@
 package org.t_robop.y_ogawara.ev3remoteapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ public class RunListActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterRun;
     //リスト編集やるためのArrayList
     ArrayList arrayListRun;
+    ArrayList tempAList;
+
     //リストのどの要素をクリックしたかを知るためのグローバル変数
     int touchPos;
 
@@ -90,8 +94,16 @@ public class RunListActivity extends AppCompatActivity {
     //復活テスト
     public void reborn(View v){
 
+        saveArray(arrayListRun,"array",this);
+
         //リスト全滅からの華麗なる復活
         Iwillbeback();
+
+    }
+
+    public void test(View v){
+
+        setList();
 
     }
 
@@ -216,24 +228,69 @@ public class RunListActivity extends AppCompatActivity {
 
         int size=arrayListRun.size();
 
-        ArrayList<String> tempAList;
-
-        tempAList=arrayListRun;
-
         for(int cnt=0;cnt<size;cnt++) {
 
             //この辺に接続処理とかtime処理とか書いてくらさい
 
             //position0をadapter上で消す
-            adapterRun.remove(adapterRun.getItem(0));
+            //arrayListRun.remove(0);
+
+            //arrayListRun
+
+            //setList();
+
+            try{
+                Thread.sleep(2000);
+            }catch(Exception e){}
+
             //ListViewにアダプター反映
-            listRun.setAdapter(adapterRun);
+            //listRun.setAdapter(adapterRun);
+            //adapterRun.notifyDataSetChanged();
         }
 
-        arrayListRun=tempAList;
+        String[] arrayList=getArray("array",this);
+
+        for(int n=0;n<arrayList.length;n++){
+
+            arrayListRun.add(arrayList[n]);
+
+        }
+
+        //アダプターの更新
+        adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
+        //アダプターセット
+        listRun.setAdapter(adapterRun);
 
         //リスト復活(リストの要素データはArrayListに入ってる)
-        setList();
+        //setList();
 
+    }
+
+
+    // プリファレンス保存
+    // aaa,bbb,ccc... の文字列で保存
+    public void saveArray(ArrayList<String> array, String PrefKey,Context context){
+        String str = new String("");
+        for (int i =0;i<array.size();i++){
+            str = str + array.get(i);
+            if (i !=array.size()-1){
+                str = str + ",";
+            }
+        }
+        SharedPreferences prefs1 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs1.edit();
+        editor.putString(PrefKey, str).commit();
+    }
+
+    // プリファレンス取得
+    // aaa,bbb,ccc...としたものをsplitして返す
+    public String[] getArray(String PrefKey,Context context){
+        SharedPreferences prefs2 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        String stringItem = prefs2.getString(PrefKey,"");
+        if(stringItem != null && stringItem.length() != 0){
+            return stringItem.split(",");
+        }else{
+            return null;
+        }
     }
 }
