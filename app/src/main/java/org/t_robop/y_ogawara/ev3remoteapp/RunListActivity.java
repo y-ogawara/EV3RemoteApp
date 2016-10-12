@@ -82,7 +82,16 @@ public class RunListActivity extends AppCompatActivity {
     //リセットボタン押した時
     public void reset(View v){
 
+        //リスト全消し
         listResetMethod();
+
+    }
+
+    //復活テスト
+    public void reborn(View v){
+
+        //リスト全滅からの華麗なる復活
+        Iwillbeback();
 
     }
 
@@ -166,7 +175,7 @@ public class RunListActivity extends AppCompatActivity {
                 }
 
                 //ここで編集用ダイアログ出す
-                showDialog(item.substring(0,2),1);//先頭二文字をタイトルに
+                showDialog(getWords(item,2),1);//先頭二文字をタイトルに
             }
         });
     }
@@ -191,9 +200,39 @@ public class RunListActivity extends AppCompatActivity {
 
     //リストをリセットするメソッド
     public void listResetMethod(){
-
+        //リスト全消し
         arrayListRun.clear();
+        //消した状態でリスト更新
+        setList();
+    }
 
+    //先頭から数えた文字数を取得するメソッド
+    public String getWords(String origin,int num){
+        return origin.substring(0,num);
+    }
+
+    //リストをposition0から消していって最後に華麗なる復活を果たす処理
+    public void Iwillbeback(){
+
+        int size=arrayListRun.size();
+
+        ArrayList<String> tempAList;
+
+        tempAList=arrayListRun;
+
+        for(int cnt=0;cnt<size;cnt++) {
+
+            //この辺に接続処理とかtime処理とか書いてくらさい
+
+            //position0をadapter上で消す
+            adapterRun.remove(adapterRun.getItem(0));
+            //ListViewにアダプター反映
+            listRun.setAdapter(adapterRun);
+        }
+
+        arrayListRun=tempAList;
+
+        //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
 
     }

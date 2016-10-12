@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,14 +17,28 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import org.t_robop.y_ogawara.ev3remoteapp.ev3.AndroidComm;
+import org.t_robop.y_ogawara.ev3remoteapp.ev3.EV3Command;
 
-import ev3command.ev3.comm.AndroidComm;
-import ev3command.ev3.comm.EV3Command;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 
 public class MainActivity extends AppCompatActivity {
+
+    //定数宣言
+    final int STOP = 0;
+    final int FRONT = 1;
+    final int BACK = 2;
+    final int RIGHT = 3;
+    final int LEFT = 4;
+    final int TEST = 5;
+
+    //sendBluetooth用の変数
+    int allTime;
+
+
 
     String macAddress;
 
@@ -131,20 +147,14 @@ public class MainActivity extends AppCompatActivity {
     public void connect(View v) {
         BluetoothAdapter mBtAdapter = null;
 
-// — —-
-
-// Get default adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-// — —-
 
-        //00:16:53:44:69:AB   ev3 青
-        //00:16:53:44:59:C0   ev3 緑
-        //00:16:53:43:DE:A0   ev3 灰色
+        //00:16:53:44:69:AB   org.t_robop.y_ogawara.ev3remoteapp.ev3 青
+        //00:16:53:44:59:C0   org.t_robop.y_ogawara.ev3remoteapp.ev3 緑
+        //00:16:53:43:DE:A0   org.t_robop.y_ogawara.ev3remoteapp.ev3 灰色
 
-// Get the device MAC address
 
-// Get the BluetoothDevice object
         BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
 
         AndroidComm.getInstance().setDevice(device); // Set device
@@ -152,11 +162,9 @@ public class MainActivity extends AppCompatActivity {
 // Connect to EV3
         try {
             EV3Command.open();
+            Toast.makeText(this, "接続成功！", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
-
-            // This exception also occurs when this device hasn’t
-            // finished paring
         }
 
 
@@ -193,16 +201,149 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     //指定時間だけ画面の処理を止める
-    void time (int num){
-        //ミリ秒に変換する
+    void sendBluetooth (int num, final int event){
         num = num*1000;
-        try{
-            //1000ミリ秒Sleepする
-            Thread.sleep(num);
-        }catch(InterruptedException e){}
+        allTime = allTime + num;
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            //遅延処理したい内容
+            public void run() {
+                try {
+                    AndroidComm.mOutputStream.write(sendMessage(event));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, allTime);
     }
 
+    //送信データの生成
+    byte[] sendMessage(int num) {
+        byte[] tele = new byte[21];
+        tele[0] = (byte)19;
+        tele[1] = (byte)0;
+        tele[2] = (byte)0;
+        tele[3] = (byte)0;
+        tele[4] = (byte)0;
+        tele[5] = (byte)0;
+        tele[6] = (byte)0;
+
+        //止まるとき
+        if (num == 0) {   //Stop Motors at PortC & D
+            tele[7] = (byte)0xA4;     //OUTPUT_POWER
+            tele[8] = (byte)0;
+            tele[9] = (byte)4;     //Motor ID = PortC
+            tele[10] = (byte)0;     //Motor Power
+            tele[11] = (byte)0xA6;    //OUTPUT_START
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;     //Motor ID = PortC
+
+            tele[14] = (byte)0xA4;     //OUTPUT_POWER
+            tele[15] = (byte)0;
+            tele[16] = (byte)8;     //Motor ID = PortD
+            tele[17] = (byte)0;     //Motor Power
+            tele[18] = (byte)0xA6;    //OUTPUT_START
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;     //Motor ID = PortD
+        }
+
+        //進むとき
+        if (num == 1) {    //Forward Motors at PortC & D
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)68;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
+
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)68;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
+        }
+        //バック
+        if (num == 2) {    //Backward Motors at PortC & D
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)40;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
+
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)40;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)9;
+        }
+
+        //右回転
+        if (num == 3) {    //Turn Right = Forward Motor at PortC(Left) and Stop PortD(Right)
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)0;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
+
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)68;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
+        }
+        //左回転
+        if (num == 4) {    //Turn Left = Forward Motor at PortD(Right) and Stop PortC(Left)
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)68;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
+
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)0;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
+        }
+        //byte配列を返す
+        return tele;
+    }
 
 }
+                /*
+                EV3を動かしたいときはこのコードを使ってください
 
+                TODO:一度実行したらallTimeを初期化してください
+
+                左側の変数 遅延時間
+                右側の変数 なにをしたいか(中身はint)
+
+                例
+                sendBluetooth(0,FRONT);
+                sendBluetooth(3,LEFT);
+                sendBluetooth(2,FRONT);
+                sendBluetooth(4,STOP);
+
+                すぐに前進
+                3病後に左回転開始
+                2秒後に右回転開始
+                4秒後にストップ
+
+                */
