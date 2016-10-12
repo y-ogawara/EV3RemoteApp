@@ -26,7 +26,7 @@ public class RunListActivity extends AppCompatActivity {
     //実行する処理用のアダプター
     ArrayAdapter<String> adapterRun;
     //リスト編集やるためのArrayList
-    ArrayList arrayListRun;
+    static ArrayList arrayListRun;
     ArrayList tempAList;
 
     //リストのどの要素をクリックしたかを知るためのグローバル変数
@@ -85,10 +85,8 @@ public class RunListActivity extends AppCompatActivity {
 
     //リセットボタン押した時
     public void reset(View v){
-
         //リスト全消し
         listResetMethod();
-
     }
 
     //復活テスト
@@ -232,8 +230,10 @@ public class RunListActivity extends AppCompatActivity {
 
             //この辺に接続処理とかtime処理とか書いてくらさい
 
+            MainActivity.sendBluetooth(0,1);
+
             //position0をadapter上で消す
-            //arrayListRun.remove(0);
+            arrayListRun.remove(0);
 
             //arrayListRun
 
@@ -266,6 +266,13 @@ public class RunListActivity extends AppCompatActivity {
 
     }
 
+    //リストの最上位のみ消す
+    public void listCelDelete(){
+        if(arrayListRun.size()!=0) {
+            arrayListRun.remove(0);
+            adapterRun.notifyDataSetChanged();
+        }
+    }
 
     // プリファレンス保存
     // aaa,bbb,ccc... の文字列で保存
