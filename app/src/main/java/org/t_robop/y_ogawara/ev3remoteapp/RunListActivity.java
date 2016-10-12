@@ -233,7 +233,7 @@ public class RunListActivity extends AppCompatActivity {
             //この辺に接続処理とかtime処理とか書いてくらさい
 
             //position0をadapter上で消す
-            //arrayListRun.remove(0);
+            arrayListRun.remove(0);
 
             //arrayListRun
 
