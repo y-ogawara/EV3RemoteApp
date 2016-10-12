@@ -79,6 +79,13 @@ public class RunListActivity extends AppCompatActivity {
         showDialog("前進",0);
     }
 
+    //リセットボタン押した時
+    public void reset(View v){
+
+        listResetMethod();
+
+    }
+
     //List更新処理(ArrayListの情報をadapter&listに反映すっぞ)
     public void setList(){
         //アダプターの更新
@@ -180,5 +187,14 @@ public class RunListActivity extends AppCompatActivity {
         edit.getEditableText().clear();
         //textView(edittext以外のView)にフォーカスを移す
         view.requestFocus();
+    }
+
+    //リストをリセットするメソッド
+    public void listResetMethod(){
+
+        arrayListRun.clear();
+
+        setList();
+
     }
 }
