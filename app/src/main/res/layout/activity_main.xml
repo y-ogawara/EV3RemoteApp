@@ -24,26 +24,38 @@
             android:layout_weight="2"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/run"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:onClick="command"
-                    android:text="実行" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/stop"
+                    <Button
+                        android:id="@+id/run"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:onClick="command"
+                        android:tag="run"
+                        android:text="実行" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:onClick="command"
-                    android:text="停止" />
-            </LinearLayout>
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/stop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:onClick="command"
+                        android:tag="stop"
+                        android:text="停止" />
+                </LinearLayout>
+            </FrameLayout>
 
             <Button
                 android:id="@+id/reset"
@@ -110,6 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:tag="front"
                         android:text="前進"
                         android:textSize="25dp" />
                 </LinearLayout>
@@ -140,18 +153,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:tag="left"
                         android:text="左回転"
                         android:textSize="25dp" />
                 </LinearLayout>
-            <Button
-                android:id="@+id/left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_above="@+id/back"
-                android:layout_toLeftOf="@+id/back"
-                android:onClick="btn"
-                android:text="左回転"
-                android:textSize="25dp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -172,21 +177,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:tag="right"
                         android:text="右回転"
                         android:textSize="25dp" />
                 </LinearLayout>
             </LinearLayout>
-            <Button
-                android:id="@+id/right"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_above="@+id/back"
-                android:layout_toRightOf="@+id/back"
-                android:onClick="btn"
-                android:text="右回転"
-                android:textSize="25dp" />
-
-        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -209,9 +204,10 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/back"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:tag="back"
+                        android:id="@+id/back"
                         android:onClick="move"
                         android:text="後退"
                         android:textSize="25dp" />
@@ -227,3 +223,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+</LinearLayout>

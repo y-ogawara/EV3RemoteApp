@@ -48,35 +48,38 @@ public class ButtonActivity extends AppCompatActivity {
         //**********************************方向判定*****************************//
         switch(v.getId()){
             case R.id.button:
-                str2 = "後";
+                str2 = "後退";
                 break;
             case R.id.button5:
-                str2 = "左";
+                str2 = "左折";
                 break;
             case R.id.button6:
-                str2 = "右";
+                str2 = "右折";
                 break;
             case R.id.button7:
-                str2 = "前";
+                str2 = "後退";
                 break;
             default:
                 break;
         }
         //********************************************************************//
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);                       //ダイアログの生成
-        alertDlg.setTitle("ダイアログタイトル");
+        //ダイアログのタイトル
+        alertDlg.setTitle(str2);
         final NumberPicker np1 = new NumberPicker(ButtonActivity.this);                     //ダイアログ中の数字ロール生成
         np1.setMaxValue(10);                                                                //上限設定
         np1.setMinValue(1);                                                                 //下限設定
+        //ナンバーピッカーの初期位置を指定できる
+        //np1.setValue(0);
         alertDlg.setView(np1);
         alertDlg.setPositiveButton(                                                         //ボタン押された処理
                 "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // OK ボタンクリック処理
-                       /* String str1 = String.valueOf(np1.getValue());
+                        String str1 = String.valueOf(np1.getValue());
                         adapter.add(str2+" "+str1);
-                        lst1.setAdapter(adapter);//*/
+                        lst1.setAdapter(adapter);
                     }
                 });
         alertDlg.setNegativeButton(
