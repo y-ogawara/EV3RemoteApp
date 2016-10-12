@@ -22,12 +22,45 @@
             android:layout_weight="1">
         </ListView>
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/btn_mae"
             android:layout_weight="1"
-            android:onClick="zensin"/>
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btn_mae"
+                android:onClick="zensin"
+                android:text="前進"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btn_re"
+                android:onClick="reset"
+                android:text="リセット"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btn_test"
+                android:onClick="test"
+                android:text="kie"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btn_born"
+                android:onClick="reborn"
+                android:text="復活のL"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
