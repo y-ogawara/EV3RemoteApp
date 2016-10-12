@@ -16,11 +16,6 @@
             android:layout_weight="8"
             android:orientation="vertical" >
 
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="list"
-                android:id="@+id/list_run"/>
         </LinearLayout>
 
         <LinearLayout
