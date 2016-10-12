@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     final int TEST = 5;
 
     //sendBluetooth用の変数
-    int allTime;
+    static int allTime;
 
 
 
@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
     //実行する処理のリスト
     ListView listRun;
     //実行する処理用のアダプター
-    ArrayAdapter<String> adapterRun;
+    static ArrayAdapter<String> adapterRun;
     //リスト編集やるためのArrayList
-    ArrayList arrayListRun;
+    static ArrayList arrayListRun;
     //リストのどの要素をクリックしたかを知るためのグローバル変数
     int touchPos;
 
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 stopBtn.setVisibility(View.INVISIBLE);
                 break;
             case "reset":
+                //リスト全消し
+                listResetMethod();
                 break;
         }
     }
@@ -203,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //指定時間だけ画面の処理を止める
-    void sendBluetooth (int num, final int event){
+    static public void sendBluetooth (int num, final int event){
         num = num*1000;
         allTime = allTime + num;
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -215,12 +217,13 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                listCelDelete();
             }
         }, allTime);
     }
 
     //送信データの生成
-    byte[] sendMessage(int num) {
+    static byte[] sendMessage(int num) {
         byte[] tele = new byte[21];
         tele[0] = (byte)19;
         tele[1] = (byte)0;
@@ -324,6 +327,100 @@ public class MainActivity extends AppCompatActivity {
         }
         //byte配列を返す
         return tele;
+    }
+
+    //List更新処理(ArrayListの情報をadapter&listに反映すっぞ)
+    public void setList(){
+        //アダプターの更新
+        adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
+        //アダプターセット
+        listRun.setAdapter(adapterRun);
+    }
+
+    //リストの最上位のみ消す
+    static public void listCelDelete(){
+        if(arrayListRun.size()!=0) {
+            arrayListRun.remove(0);
+            adapterRun.notifyDataSetChanged();
+        }
+    }
+
+    //リストをリセットするメソッド
+    public void listResetMethod(){
+        //リスト全消し
+        arrayListRun.clear();
+        //消した状態でリスト更新
+        setList();
+    }
+
+    //リストの要素クリックした時
+    public void setListClick() {
+
+        //アイテムクリック時ののイベントを追加
+        listRun.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent,
+                                    View view, int pos, long id) {
+
+                //今クリックした要素のポジションを取得
+                touchPos = pos;
+
+                //選択アイテムを取得
+                ListView listView = (ListView) parent;
+                String item = (String) listView.getItemAtPosition(pos);
+
+                //文字数へらせ
+                final String title=getWords(item,2);
+
+                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);                       //ダイアログの生成
+                //ダイアログのタイトル
+                alertDlg.setTitle(title);
+                final NumberPicker np1 = new NumberPicker(MainActivity.this);                     //ダイアログ中の数字ロール生成
+                np1.setMaxValue(10);                                                                //上限設定
+                np1.setMinValue(1);                                                                 //下限設定
+                //ナンバーピッカーの初期位置を指定できる
+                //np1.setValue(0);
+                alertDlg.setView(np1);
+                alertDlg.setPositiveButton(                                                         //ボタン押された処理
+                        "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK ボタンクリック処理
+
+                                //選択された要素を編集
+                                arrayListRun.set(touchPos, title + "【" + String.valueOf(np1.getValue()) + "秒】");
+
+                                setList();
+                            }
+                        });
+                alertDlg.setNegativeButton(
+                        "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Cancel ボタンクリック処理
+                            }
+                        });
+
+                // 表示
+                alertDlg.create().show();
+
+
+                //listから数値のみ取得
+                int ret = Integer.parseInt(item.substring(4 - 1).replaceAll("[^0-9]", ""));
+                //数値がある時(安全設計)
+                if (String.valueOf(ret) != "") {
+                    //ダイアログ内のedittextに貼る
+                    //dialogEdit.setText(String.valueOf(ret));
+                }
+
+                //ここで編集用ダイアログ出す
+                //showDialog(getWords(item,2),1);//先頭二文字をタイトルに
+            }
+        });
+    }
+
+    //先頭から数えた文字数を取得するメソッド
+    public String getWords(String origin,int num){
+        return origin.substring(0,num);
     }
 
 }
