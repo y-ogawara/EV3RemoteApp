@@ -44,7 +44,8 @@
                         android:layout_height="match_parent"
                         android:onClick="command"
                         android:tag="run"
-                        android:text="実行" />
+                        android:text="実行"
+                        android:background="#00B6F3"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -57,7 +58,8 @@
                         android:layout_height="match_parent"
                         android:onClick="command"
                         android:tag="stop"
-                        android:text="停止" />
+                        android:text="停止"
+                        android:background="#ff0000"/>
                 </LinearLayout>
             </FrameLayout>
 
@@ -67,7 +69,8 @@
                 android:layout_height="match_parent"
                 android:onClick="command"
                 android:layout_weight="1"
-                android:text="リセット" />
+                android:text="リセット"
+                android:background="#ffff00"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -112,7 +115,8 @@
                         android:layout_height="match_parent"
                         android:onClick="connect"
                         android:text="接続"
-                        android:textSize="25dp" />
+                        android:textSize="25dp"
+                        android:background="#66cdaa"/>
                 </LinearLayout>
 
                 <LinearLayout
