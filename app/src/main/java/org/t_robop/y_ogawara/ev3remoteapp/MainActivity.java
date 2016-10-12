@@ -2,30 +2,29 @@ package org.t_robop.y_ogawara.ev3remoteapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.os.Vibrator;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import static org.t_robop.y_ogawara.ev3remoteapp.R.id.stop;
+import ev3command.ev3.comm.AndroidComm;
+import ev3command.ev3.comm.EV3Command;
+
+
 
 public class MainActivity extends AppCompatActivity {
+
+    String macAddress;
 
     String str2;
 
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Button stopBtn =(Button)findViewById(R.id.stop);
         runBtn.setVisibility(View.VISIBLE);
         stopBtn.setVisibility(View.INVISIBLE);
+        spinnerSetting();
 
         //リストの関連付け
         listRun=(ListView)findViewById(R.id.list_run);
@@ -128,7 +128,81 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //接続ボタン処理
-    public void connect(View v){
+    public void connect(View v) {
+        BluetoothAdapter mBtAdapter = null;
+
+// — —-
+
+// Get default adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+// — —-
+
+        //00:16:53:44:69:AB   ev3 青
+        //00:16:53:44:59:C0   ev3 緑
+        //00:16:53:43:DE:A0   ev3 灰色
+
+// Get the device MAC address
+
+// Get the BluetoothDevice object
+        BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
+
+        AndroidComm.getInstance().setDevice(device); // Set device
+
+// Connect to EV3
+        try {
+            EV3Command.open();
+        } catch (Exception e) {
+            Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
+
+            // This exception also occurs when this device hasn’t
+            // finished paring
+        }
+
 
     }
+    //spinner設定用メソッド
+    void spinnerSetting (){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // アイテムを追加します
+        adapter.add("00:16:53:44:69:AB,ev3青");
+        adapter.add("00:16:53:44:59:C0,eb3緑");
+        adapter.add("00:16:53:43:DE:A0,ev3灰色");
+
+        //スピナーの関連付け
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // アダプターを設定します
+        spinner.setAdapter(adapter);
+        // スピナーのアイテムが選択された時に呼び出されるコールバックリスナーを登録します
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //スピナーを宣言
+                Spinner spinner = (Spinner) parent;
+                // 選択されたアイテムを取得
+                String item = (String) spinner.getSelectedItem();
+                // , で文字を分割して保存
+                String addressArray[] = item.split(",",0);
+                //macAddressにaddressを入れる
+                macAddress =addressArray[0];
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+    }
+    //指定時間だけ画面の処理を止める
+    void time (int num){
+        //ミリ秒に変換する
+        num = num*1000;
+        try{
+            //1000ミリ秒Sleepする
+            Thread.sleep(num);
+        }catch(InterruptedException e){}
+    }
+
+
 }
+
