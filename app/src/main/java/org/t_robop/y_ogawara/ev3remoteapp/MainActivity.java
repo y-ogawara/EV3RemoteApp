@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     String macAddress;
 
-    String str2;
+    String action;
 
     /**リスト関連**/
     //実行する処理のリスト
@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             case "run":
                 runBtn.setVisibility(View.INVISIBLE);
                 stopBtn.setVisibility(View.VISIBLE);
+                Iwillbeback();
                 break;
             case "stop":
                 runBtn.setVisibility(View.VISIBLE);
@@ -104,22 +105,22 @@ public class MainActivity extends AppCompatActivity {
     public void move(View v){
         switch (String.valueOf(v.getTag())){
             case "front":
-                str2 = "前進";
+                action = "前進";
                 break;
             case "left":
-                str2 = "左折";
+                action = "左折";
                 break;
             case "right":
-                str2 = "右折";
+                action = "右折";
                 break;
             case "back":
-                str2 = "後退";
+                action = "後退";
                 break;
         }
         //********************************************************************//
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);                       //ダイアログの生成
         //ダイアログのタイトル
-        alertDlg.setTitle(str2);
+        alertDlg.setTitle(action);
         final NumberPicker np1 = new NumberPicker(MainActivity.this);                     //ダイアログ中の数字ロール生成
         np1.setMaxValue(10);                                                                //上限設定
         np1.setMinValue(1);                                                                 //下限設定
@@ -131,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // OK ボタンクリック処理
-                        String str1 = String.valueOf(np1.getValue());
-                        adapterRun.add(str2+" "+str1);
-                        listRun.setAdapter(adapterRun);
+                        String second = String.valueOf(np1.getValue());
+                        arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
+                        setList();
                     }
                 });
         alertDlg.setNegativeButton(
