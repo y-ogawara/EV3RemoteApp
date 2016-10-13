@@ -262,7 +262,7 @@ public class RunListActivity extends AppCompatActivity {
         listRun.setAdapter(adapterRun);
 
         //リスト復活(リストの要素データはArrayListに入ってる)
-        //setList();
+        setList();
 
     }
 

@@ -2,7 +2,9 @@ package org.t_robop.y_ogawara.ev3remoteapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         //アダプターの初期化
         adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
 
+        setListClick();
+
     }
 
     //命令ボタン処理
@@ -103,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 str2 = "前進";
                 break;
             case "left":
-                str2 = "左回転";
+                str2 = "左折";
                 break;
             case "right":
-                str2 = "右回転";
+                str2 = "右折";
                 break;
             case "back":
                 str2 = "後退";
@@ -368,8 +372,11 @@ public class MainActivity extends AppCompatActivity {
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(pos);
 
-                //文字数へらせ
+                //文字数へらしてタイトル取得
                 final String title=getWords(item,2);
+
+                //秒数取得
+                int ret = Integer.parseInt(item.substring(2 - 1).replaceAll("[^0-9]", ""));
 
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);                       //ダイアログの生成
                 //ダイアログのタイトル
@@ -377,8 +384,8 @@ public class MainActivity extends AppCompatActivity {
                 final NumberPicker np1 = new NumberPicker(MainActivity.this);                     //ダイアログ中の数字ロール生成
                 np1.setMaxValue(10);                                                                //上限設定
                 np1.setMinValue(1);                                                                 //下限設定
-                //ナンバーピッカーの初期位置を指定できる
-                //np1.setValue(0);
+                //ナンバーピッカーの初期位置を指定
+                np1.setValue(ret);
                 alertDlg.setView(np1);
                 alertDlg.setPositiveButton(                                                         //ボタン押された処理
                         "OK",
@@ -403,17 +410,6 @@ public class MainActivity extends AppCompatActivity {
                 // 表示
                 alertDlg.create().show();
 
-
-                //listから数値のみ取得
-                int ret = Integer.parseInt(item.substring(4 - 1).replaceAll("[^0-9]", ""));
-                //数値がある時(安全設計)
-                if (String.valueOf(ret) != "") {
-                    //ダイアログ内のedittextに貼る
-                    //dialogEdit.setText(String.valueOf(ret));
-                }
-
-                //ここで編集用ダイアログ出す
-                //showDialog(getWords(item,2),1);//先頭二文字をタイトルに
             }
         });
     }
@@ -421,6 +417,87 @@ public class MainActivity extends AppCompatActivity {
     //先頭から数えた文字数を取得するメソッド
     public String getWords(String origin,int num){
         return origin.substring(0,num);
+    }
+
+    // プリファレンス保存
+    // aaa,bbb,ccc... の文字列で保存
+    public void saveArray(ArrayList<String> array, String PrefKey,Context context){
+        String str = new String("");
+        for (int i =0;i<array.size();i++){
+            str = str + array.get(i);
+            if (i !=array.size()-1){
+                str = str + ",";
+            }
+        }
+        SharedPreferences prefs1 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs1.edit();
+        editor.putString(PrefKey, str).commit();
+    }
+
+    // プリファレンス取得
+    // aaa,bbb,ccc...としたものをsplitして返す
+    public String[] getArray(String PrefKey,Context context){
+        SharedPreferences prefs2 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        String stringItem = prefs2.getString(PrefKey,"");
+        if(stringItem != null && stringItem.length() != 0){
+            return stringItem.split(",");
+        }else{
+            return null;
+        }
+    }
+
+    //リストをposition0から消していって最後に華麗なる復活を果たす処理
+    public void Iwillbeback(){
+
+        String listItem;
+
+        saveArray(arrayListRun,"array",this);
+
+        int size=arrayListRun.size();
+
+        for(int cnt=0;cnt<size;cnt++) {
+
+            //この辺に接続処理とかtime処理とか書いてくらさい
+
+            //listの要素を取得
+            listItem=String.valueOf(arrayListRun.get(cnt));
+
+            //秒数取得
+            int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
+
+            //要素の前からに文字を取得
+            switch (getWords(listItem,2)){
+                case "前進":
+                    sendBluetooth(ret,FRONT);
+                    break;
+                case "後退":
+                    sendBluetooth(ret,BACK);
+                    break;
+                case "右折":
+                    sendBluetooth(ret,RIGHT);
+                    break;
+                case "左折":
+                    sendBluetooth(ret,LEFT);
+                    break;
+            }
+        }
+
+        String[] arrayList=getArray("array",this);
+
+        for(int n=0;n<arrayList.length;n++){
+
+            arrayListRun.add(arrayList[n]);
+
+        }
+
+        //アダプターの更新
+        //adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
+        //アダプターセット
+        //listRun.setAdapter(adapterRun);
+
+        //リスト復活(リストの要素データはArrayListに入ってる)
+        setList();
+
     }
 
 }
