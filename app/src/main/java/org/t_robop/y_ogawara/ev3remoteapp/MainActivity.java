@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     //sendBluetooth用の変数
     static int allTime;
-
-
 
     String macAddress;
 
@@ -87,13 +86,17 @@ public class MainActivity extends AppCompatActivity {
         Button stopBtn =(Button)findViewById(R.id.stop);
         switch (String.valueOf(v.getTag())){
             case "run":
-                runBtn.setVisibility(View.INVISIBLE);
-                stopBtn.setVisibility(View.VISIBLE);
-                Iwillbeback();
+                if(arrayListRun.size()!=0) {
+                    runBtn.setVisibility(View.INVISIBLE);
+                    stopBtn.setVisibility(View.VISIBLE);
+                    Iwillbeback();
+                }
                 break;
             case "stop":
                 runBtn.setVisibility(View.VISIBLE);
                 stopBtn.setVisibility(View.INVISIBLE);
+                //停止処理
+                sendBluetooth(1,STOP);
                 break;
             case "reset":
                 //リスト全消し
@@ -172,6 +175,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "接続成功！", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
+        }
+
+        // キーボードを強制的に隠せてない
+        if (v != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
 
 
@@ -348,13 +357,16 @@ public class MainActivity extends AppCompatActivity {
             arrayListRun.remove(0);
             adapterRun.notifyDataSetChanged();
         }
+        else
+        {
+            sendBluetooth(1,0);
+        }
     }
 
     //リストをリセットするメソッド
     public void listResetMethod(){
         //リスト全消し
         arrayListRun.clear();
-        //消した状態でリスト更新
         setList();
     }
 
