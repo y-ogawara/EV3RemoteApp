@@ -38,7 +38,8 @@
                         android:layout_height="match_parent"
                         android:onClick="command"
                         android:tag="run"
-                        android:text="実行" />
+                        android:text="実行"
+                        android:backgroundTint="#2196f3"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -51,17 +52,20 @@
                         android:layout_height="match_parent"
                         android:onClick="command"
                         android:tag="stop"
-                        android:text="停止" />
+                        android:text="停止"
+                        android:backgroundTint="#f44336"/>
                 </LinearLayout>
             </FrameLayout>
 
             <Button
                 android:id="@+id/reset"
+                android:tag="reset"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:onClick="command"
                 android:layout_weight="1"
-                android:text="リセット" />
+                android:text="リセット"
+                android:backgroundTint="#FFEB3B" />
         </LinearLayout>
     </LinearLayout>
 
@@ -106,7 +110,8 @@
                         android:layout_height="match_parent"
                         android:onClick="connect"
                         android:text="接続"
-                        android:textSize="25dp" />
+                        android:textSize="25dp"
+                        android:backgroundTint="#CDDC39"/>
                 </LinearLayout>
 
                 <LinearLayout
