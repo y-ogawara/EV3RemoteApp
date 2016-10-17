@@ -66,4 +66,14 @@
         android:layout_alignEnd="@+id/button"
         android:id="@+id/button7"
         android:onClick="onSend"/>
+
+    <Button
+        android:text="実行"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/button8"
+        android:onClick="onSend"/>
 </RelativeLayout>
