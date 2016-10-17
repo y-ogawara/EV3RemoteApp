@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,6 +27,11 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private final Context context = this;
+    private final Handler handler = new Handler();
+    int event;
+
 
     //定数宣言
     final int STOP = 0;
@@ -209,22 +213,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    public final Runnable sendBluetoothTask = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                AndroidComm.mOutputStream.write(sendMessage(event));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            listCelDelete();
+        }
+    };
+
     //指定時間だけ画面の処理を止める
-    static public void sendBluetooth (int num, final int event){
+    public void sendBluetooth(int num, final int event){
         num = num*1000;
         allTime = allTime + num;
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            //遅延処理したい内容
-            public void run() {
-                try {
-                    AndroidComm.mOutputStream.write(sendMessage(event));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                listCelDelete();
-            }
-        }, allTime);
+        this.event =  event;
+        handler.postDelayed(sendBluetoothTask, num);
+
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            @Override
+//            //遅延処理したい内容
+//            public void run() {
+//                try {
+//                    AndroidComm.mOutputStream.write(sendMessage(event));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                listCelDelete();
+//            }
+//        }, allTime);
     }
 
     //送信データの生成
@@ -449,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
 
     //リストをposition0から消していって最後に華麗なる復活を果たす処理
     public void Iwillbeback(){
-
+        allTime = 0;
         String listItem;
 
         saveArray(arrayListRun,"array",this);
@@ -500,6 +520,12 @@ public class MainActivity extends AppCompatActivity {
         setList();
 
     }
+    void cancel(){
+        handler.postDelayed(sendBluetoothTask,0);
+
+    }
+
+
 
 }
                 /*
