@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     //定数宣言
