@@ -27,7 +27,7 @@ public class FilterActivity extends AppCompatActivity {
     private View mView;
     private WindowManager mWindowManager;
 
-    @Override
+
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -63,10 +63,10 @@ public class FilterActivity extends AppCompatActivity {
         mWindowManager.removeView(mView);
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+//    @Nullable
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        return null;
+//    }
 
 }
