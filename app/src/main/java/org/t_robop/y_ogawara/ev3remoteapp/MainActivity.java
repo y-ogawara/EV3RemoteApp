@@ -3,6 +3,7 @@ package org.t_robop.y_ogawara.ev3remoteapp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import org.t_robop.y_ogawara.ev3remoteapp.ev3.AndroidComm;
 import org.t_robop.y_ogawara.ev3remoteapp.ev3.EV3Command;
+import org.t_robop.y_ogawara.ev3remoteapp.ev3.FilterActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,10 +87,16 @@ public class MainActivity extends AppCompatActivity {
             case "run":
                 runBtn.setVisibility(View.INVISIBLE);
                 stopBtn.setVisibility(View.VISIBLE);
+                //フィルターをかける
+                Intent intent = new Intent(MainActivity.this, FilterActivity.class);
+                startService(intent);
                 break;
             case "stop":
                 runBtn.setVisibility(View.VISIBLE);
                 stopBtn.setVisibility(View.INVISIBLE);
+                //フィルターを解く
+                Intent intent1 = new Intent(MainActivity.this, FilterActivity.class);
+                stopService(intent1);
                 break;
             case "reset":
                 break;
