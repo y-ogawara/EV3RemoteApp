@@ -5,13 +5,15 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!--パーミッション定義しないと動きません-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".debugIntentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ButtonActivity" />
-        <activity android:name=".RunListActivity"></activity>
+        <activity android:name=".RunListActivity" />
+        <activity android:name=".ev3.FilterActivity"></activity>
+        <!--サービスを定義しないとstartService出来ません-->
+        <service android:name=".FilterActivity"/>
     </application>
 
 </manifest>
