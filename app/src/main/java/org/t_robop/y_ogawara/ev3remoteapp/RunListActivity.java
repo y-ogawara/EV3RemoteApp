@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static android.R.attr.inputType;
+
 public class RunListActivity extends AppCompatActivity {
 
     //ArrayListに追加➝ArrayListを元にしたArrayAdapterを作成➝ListにArrayAdapterを反映
@@ -133,7 +135,7 @@ public class RunListActivity extends AppCompatActivity {
                             //入力された文字列の文字数が0でない時(何か入力されてる時)
                             if(dialogEdit.getText().toString().length()!=0) {
                                 //入力されたText取得
-                                int second = Integer.parseInt(dialogEdit.getText().toString());
+                                float second = Float.parseFloat(dialogEdit.getText().toString());
                                 //新規作成時
                                 if (NUM == 0) {
                                     //ArrayListに追加
@@ -177,7 +179,7 @@ public class RunListActivity extends AppCompatActivity {
                 String item = (String)listView.getItemAtPosition(pos);
 
                 //listから数値のみ取得
-                int ret = Integer.parseInt(item.substring(4-1).replaceAll("[^0-9]",""));
+                float ret = Float.parseFloat(item.substring(4-1).replaceAll("[^0-9]",""));
                 //数値がある時(安全設計)
                 if(String.valueOf(ret)!="") {
                     //ダイアログ内のedittextに貼る
