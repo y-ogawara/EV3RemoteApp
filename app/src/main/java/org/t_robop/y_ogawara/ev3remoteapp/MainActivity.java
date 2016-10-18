@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -26,12 +27,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
+public class MainActivity extends AppCompatActivity implements Handler.Callback {
 
-public class MainActivity extends AppCompatActivity {
+    //private final Context context = this;
+    Handler handler = new Handler();
+    int eventCode;
+    int test;
 
-    private final Context context = this;
-    private final Handler handler = new Handler();
-    int event;
+    Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+        //Log.d("test", String.valueOf(allTime));
+        handler.sendEmptyMessage(1);
+    }
+};
+
 
 
     //定数宣言
@@ -43,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     final int TEST = 5;
 
     //sendBluetooth用の変数
-    static int allTime;
+    //int allTime;
 
     String macAddress;
 
@@ -64,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        handler = new Handler(MainActivity.this);
 
         Button runBtn =(Button)findViewById(R.id.run);
         Button stopBtn =(Button)findViewById(R.id.stop);
@@ -71,12 +82,16 @@ public class MainActivity extends AppCompatActivity {
         stopBtn.setVisibility(View.INVISIBLE);
         spinnerSetting();
 
+
+
         //リストの関連付け
         listRun=(ListView)findViewById(R.id.list_run);
 
         /**list関連の初期設定**/
         //ArrayListの初期化
         arrayListRun=new ArrayList<String>();
+        saveArray(arrayListRun,"array",this);
+
         //アダプターの初期化
         adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
 
@@ -99,8 +114,10 @@ public class MainActivity extends AppCompatActivity {
             case "stop":
                 runBtn.setVisibility(View.VISIBLE);
                 stopBtn.setVisibility(View.INVISIBLE);
+                cancel();
                 //停止処理
-                sendBluetooth(1,STOP);
+                sendBluetooth(0,STOP);
+                //allTime = 0;
                 break;
             case "reset":
                 //リスト全消し
@@ -222,25 +239,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    public final Runnable sendBluetoothTask = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                AndroidComm.mOutputStream.write(sendMessage(event));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            listCelDelete();
-        }
-    };
-
     //指定時間だけ画面の処理を止める
-    public void sendBluetooth(int num, final int event){
+    public void sendBluetooth(int num,int event){
         num = num*1000;
-        allTime = allTime + num;
-        this.event =  event;
-        handler.postDelayed(sendBluetoothTask, num);
+
+        //ここでグローバルに入っている
+        eventCode =  event;
+
+        //ここで信号をEV3に送信
+        try {
+            AndroidComm.mOutputStream.write(sendMessage(eventCode));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //ここで指定時間後に
+        handler.postDelayed(runnable, num);
 
 //        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 //            @Override
@@ -372,14 +385,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //リストの最上位のみ消す
-    static public void listCelDelete(){
+     public void listCelDelete(){
         if(arrayListRun.size()!=0) {
             arrayListRun.remove(0);
             adapterRun.notifyDataSetChanged();
         }
         else
         {
-            sendBluetooth(1,0);
+            //TODO テスト処理で邪魔だったので消しました
+            //sendBluetooth(1,0);
         }
     }
 
@@ -481,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
 
     //リストをposition0から消していって最後に華麗なる復活を果たす処理
     public void Iwillbeback(){
-        allTime = 0;
+        //allTime = 0;
         String listItem;
 
         saveArray(arrayListRun,"array",this);
@@ -533,8 +547,76 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void cancel(){
-        handler.postDelayed(sendBluetoothTask,0);
+        handler.removeCallbacks(runnable);
 
+    }
+    public void test (View v){
+        sendBluetooth(3,BACK);
+
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("test", String.valueOf(allTime));
+//         /* 処理 */
+//            }
+//        }, allTime); /*1000ミリ秒*/
+//        allTime = 0;
+//        sendBluetooth(0,FRONT);
+//        sendBluetooth(4,RIGHT);
+//        sendBluetooth(4,LEFT);
+//        sendBluetooth(4,FRONT);
+
+    }
+    public void test2(View v){
+//        handler.removeCallbacks(runnable);
+        try {
+            AndroidComm.mOutputStream.write(sendMessage(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    @Override
+    public boolean handleMessage(Message msg) {
+        //コールバックメッセージを取得
+        switch(msg.what){
+            case 0:
+                //エラー用
+                return true;
+            case 1:
+                // 遅延処理が完了したときに呼ばれる
+                // 次の遅延処理を呼び出して欲しい
+
+                //リストの中身がまだある時
+                if (test < 5){
+                    /*リストの中身を取得
+
+
+                    */
+                    /*リストの中身を代入
+                    eventCode = FRONT;
+                    みたいな
+                    */
+                    test++;
+                    eventCode = test;
+                    sendBluetooth(3,eventCode);
+
+                }else{
+                    try {
+                        AndroidComm.mOutputStream.write(sendMessage(0));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    test = 0;
+                }
+
+
+
+
+                return true;
+            default:
+                return false;
+        }
     }
 
 
