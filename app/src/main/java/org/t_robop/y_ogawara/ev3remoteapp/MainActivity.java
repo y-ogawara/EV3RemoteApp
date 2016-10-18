@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
      * リスト関連
      **/
     //実行する処理のリスト
-    ListView listRun;
+    static ListView listRun;
     //実行する処理用のアダプター
     static ArrayAdapter<String> adapterRun;
     //リスト編集やるためのArrayList
@@ -85,17 +84,20 @@ public class MainActivity extends AppCompatActivity {
             if (arrayListRun.size() != 0) {
                 //テキストを「停止」に変更
                 com.setText("停止");
-                Iwillbeback();
+                //上から処理開始
+                TheRunningMachine();
             }
         }else{
             //テキストを「実行」に変更
             com.setText("実行");
             //停止処理
             sendBluetooth(1, STOP);
+            //実行されなかったリストの要素を消す
+            arrayListRun.clear();
+            //華麗に復活
+            Iwillbeback();
         }
     }
-
-
 
     //リセットボタンの処理
     public void reset(View v) {
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 //                if(arrayListRun.size()!=0) {
 //                    runBtn.setVisibility(View.INVISIBLE);
 //                    stopBtn.setVisibility(View.VISIBLE);
-//                    Iwillbeback();
+//                    TheRunningMachine();
 //                }
 //                break;
 //            case "stop":
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //指定時間だけ画面の処理を止める
-    static public void sendBluetooth(int num, final int event) {
+    public void sendBluetooth(int num, final int event) {
         num = num * 1000;
         allTime = allTime + num;
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -257,7 +259,18 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                listCelDelete();
+                //どんどん消されていくのを防ぐために停止処理の時は要素を消さない
+                if(event!=STOP) {
+                    //最上位の要素消すマン
+                    listCelDelete();
+                }
+                //もし要素が無くなったら
+                if(arrayListRun.size()==0){
+                    //停止処理送るやで
+                    sendBluetooth(1,STOP);
+                    //華麗なる復活
+                    Iwillbeback();
+                }
             }
         }, allTime);
     }
@@ -378,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //リストの最上位のみ消す
-    static public void listCelDelete() {
+    public void listCelDelete() {
         if (arrayListRun.size() != 0) {
             arrayListRun.remove(0);
             adapterRun.notifyDataSetChanged();
@@ -456,45 +469,19 @@ public class MainActivity extends AppCompatActivity {
         return origin.substring(0, num);
     }
 
-    // プリファレンス保存
-    // aaa,bbb,ccc... の文字列で保存
-    public void saveArray(ArrayList<String> array, String PrefKey, Context context) {
-        String str = new String("");
-        for (int i = 0; i < array.size(); i++) {
-            str = str + array.get(i);
-            if (i != array.size() - 1) {
-                str = str + ",";
-            }
-        }
-        SharedPreferences prefs1 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs1.edit();
-        editor.putString(PrefKey, str).commit();
-    }
-
-    // プリファレンス取得
-    // aaa,bbb,ccc...としたものをsplitして返す
-    public String[] getArray(String PrefKey, Context context) {
-        SharedPreferences prefs2 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
-        String stringItem = prefs2.getString(PrefKey, "");
-        if (stringItem != null && stringItem.length() != 0) {
-            return stringItem.split(",");
-        } else {
-            return null;
-        }
-    }
-
-    //リストをposition0から消していって最後に華麗なる復活を果たす処理
-    public void Iwillbeback() {
+    //リストの処理内容を送るメソッド
+    public void TheRunningMachine() {
 
         String listItem;
 
+        //リストの内容を保存
         saveArray(arrayListRun, "array", this);
 
+        //要素数を取得
         int size = arrayListRun.size();
 
+        //要素数だけ回す
         for (int cnt = 0; cnt < size; cnt++) {
-
-            //この辺に接続処理とかtime処理とか書いてくらさい
 
             //listの要素を取得
             listItem = String.valueOf(arrayListRun.get(cnt));
@@ -502,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
             //秒数取得
             int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
 
-            //要素の前からに文字を取得
+            //要素の前からに文字を取得して送る処理を変える
             switch (getWords(listItem, 2)) {
                 case "前進":
                     sendBluetooth(ret, FRONT);
@@ -519,22 +506,45 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    //リストの要素が華麗に復活を果たすメソッド
+    public void Iwillbeback(){
+        //保存した要素を取得
         String[] arrayList = getArray("array", this);
-
+        //追加処理
         for (int n = 0; n < arrayList.length; n++) {
-
             arrayListRun.add(arrayList[n]);
-
         }
-
-        //アダプターの更新
-        //adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
-        //アダプターセット
-        //listRun.setAdapter(adapterRun);
-
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
+    }
 
+    // プリファレンス保存
+    // aaa,bbb,ccc... の文字列で保存
+    static public void saveArray(ArrayList<String> array, String PrefKey, Context context) {
+        String str = new String("");
+        for (int i = 0; i < array.size(); i++) {
+            str = str + array.get(i);
+            if (i != array.size() - 1) {
+                str = str + ",";
+            }
+        }
+        SharedPreferences prefs1 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs1.edit();
+        editor.putString(PrefKey, str).commit();
+    }
+
+    // プリファレンス取得
+    // aaa,bbb,ccc...としたものをsplitして返す
+    static public String[] getArray(String PrefKey, Context context) {
+        SharedPreferences prefs2 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
+        String stringItem = prefs2.getString(PrefKey, "");
+        if (stringItem != null && stringItem.length() != 0) {
+            return stringItem.split(",");
+        } else {
+            return null;
+        }
     }
 
 }

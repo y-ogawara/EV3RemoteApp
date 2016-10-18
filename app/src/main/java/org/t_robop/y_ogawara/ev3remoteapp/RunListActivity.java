@@ -232,7 +232,7 @@ public class RunListActivity extends AppCompatActivity {
 
             //この辺に接続処理とかtime処理とか書いてくらさい
 
-            MainActivity.sendBluetooth(0,1);
+            //MainActivity.sendBluetooth(0,1);
 
             //position0をadapter上で消す
             arrayListRun.remove(0);
