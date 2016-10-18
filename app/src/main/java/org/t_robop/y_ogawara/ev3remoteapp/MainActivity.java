@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -82,14 +83,14 @@ public class MainActivity extends AppCompatActivity {
         Button com = (Button) findViewById(R.id.com);
         if (String.valueOf(com.getText()).equals("実行")){
             if (arrayListRun.size() != 0) {
-                //テキストを「停止」に変更
+                //ボタンのテキストを「停止」に変更
                 com.setText("停止");
+                //ボタンのbackgroundを赤に変更
+                com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_stop));
                 //上から処理開始
                 TheRunningMachine();
             }
         }else{
-            //テキストを「実行」に変更
-            com.setText("実行");
             //停止処理
             sendBluetooth(1, STOP);
             //実行されなかったリストの要素を消す
@@ -518,6 +519,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
+        //テキストを「実行」に変更
+        Button com=(Button)findViewById(R.id.com);
+        com.setText("実行");
+        com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
     }
 
     // プリファレンス保存
