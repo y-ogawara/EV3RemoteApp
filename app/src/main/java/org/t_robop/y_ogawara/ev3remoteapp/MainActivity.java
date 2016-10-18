@@ -571,9 +571,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 //        handler.removeCallbacks(runnable);
         try {
             AndroidComm.mOutputStream.write(sendMessage(0));
+
         } catch (IOException e) {
             e.printStackTrace();
+
         }
+        //TODO テストコード
+        test = 5;
 
     }
     @Override
@@ -586,6 +590,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             case 1:
                 // 遅延処理が完了したときに呼ばれる
                 // 次の遅延処理を呼び出して欲しい
+
+                //TODO ここらへんからテストコード
 
                 //リストの中身がまだある時
                 if (test < 5){
