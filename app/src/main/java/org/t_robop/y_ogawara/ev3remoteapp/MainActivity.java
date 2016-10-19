@@ -392,13 +392,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             //次のデータ送信
             TheRunningMachine();
         }
-        //要素無い時
-        else {
-            //要素無いので停止
-            test2();
-            //華麗なる復活
-            Iwillbeback();
-        }
     }
 
     //リストをリセットするメソッド
@@ -499,16 +492,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //リストのposition0の内容に応じた処理を送信するメソッド
     public void TheRunningMachine() {
-        //allTime = 0;
-
-        //要素の一時保存
-        //saveArray(arrayListRun, "array", this);
-
-        //int size = arrayListRun.size();
-
-        //for (int cnt = 0; cnt < size; cnt++) {
-
-            //この辺に接続処理とかtime処理とか書いてくらさい
+        //この辺に接続処理とかtime処理とか書いてくらさい
 
         if(arrayListRun.size()!=0) {
             //listの要素を取得
