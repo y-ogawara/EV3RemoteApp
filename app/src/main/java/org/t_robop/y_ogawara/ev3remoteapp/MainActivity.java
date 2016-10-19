@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
 
     //指定時間だけ画面の処理を止める
-    public void sendBluetooth(int num,int event){
+    public void sendBluetooth(float num,int event){
         num = num*1000;
 
         //ここで信号をEV3に送信
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             e.printStackTrace();
         }
         //ここで指定時間後に
-        handler.postDelayed(runnable, num);
+        handler.postDelayed(runnable, (long)num);
 
 
     }
