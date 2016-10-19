@@ -119,6 +119,21 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
+                    <Button
+                        android:text="Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/button8"
+                        android:layout_weight="1"
+                        android:onClick="test" />
+
+                    <Button
+                        android:text="Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/button9"
+                        android:layout_weight="1"
+                        android:onClick="test2" />
                 </LinearLayout>
             </LinearLayout>
 

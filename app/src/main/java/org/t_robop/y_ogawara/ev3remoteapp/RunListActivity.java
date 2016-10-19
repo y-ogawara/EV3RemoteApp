@@ -3,9 +3,9 @@ package org.t_robop.y_ogawara.ev3remoteapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,8 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import static android.R.attr.inputType;
 
 public class RunListActivity extends AppCompatActivity {
 
