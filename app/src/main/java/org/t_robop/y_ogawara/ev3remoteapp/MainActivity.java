@@ -41,9 +41,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         handler.sendEmptyMessage(1);
     }
 };
-
-
-
+    
     //定数宣言
     final int STOP = 0;
     final int FRONT = 1;
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     //リストのどの要素をクリックしたかを知るためのグローバル変数
     int touchPos;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         runBtn.setVisibility(View.VISIBLE);
         stopBtn.setVisibility(View.INVISIBLE);
         spinnerSetting();
-
-
 
         //リストの関連付け
         listRun=(ListView)findViewById(R.id.list_run);
@@ -108,7 +103,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 if(arrayListRun.size()!=0) {
                     runBtn.setVisibility(View.INVISIBLE);
                     stopBtn.setVisibility(View.VISIBLE);
-                    Iwillbeback();
+                    //要素の一時保存
+                    saveArray(arrayListRun, "array", this);
+                    TheRunningMachine();
                 }
                 break;
             case "stop":
@@ -386,14 +383,23 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //リストの最上位のみ消す
      public void listCelDelete(){
+         //要素がまだある時
         if(arrayListRun.size()!=0) {
+            //最上位の要素消す
             arrayListRun.remove(0);
+            //リスト適用
             adapterRun.notifyDataSetChanged();
+
+            //次のデータ送信
+            TheRunningMachine();
         }
-        else
-        {
-            //TODO テスト処理で邪魔だったので消しました
-            //sendBluetooth(1,0);
+        //要素無い時
+        else {
+            //要素無いので停止
+            sendBluetooth(0,STOP);
+
+            //華麗なる復活
+            Iwillbeback();
         }
     }
 
@@ -493,58 +499,53 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
     }
 
-    //リストをposition0から消していって最後に華麗なる復活を果たす処理
-    public void Iwillbeback(){
+    //リストのposition0の内容に応じた処理を送信するメソッド
+    public void TheRunningMachine() {
         //allTime = 0;
-        String listItem;
 
-        saveArray(arrayListRun,"array",this);
+        //要素の一時保存
+        //saveArray(arrayListRun, "array", this);
 
-        int size=arrayListRun.size();
+        //int size = arrayListRun.size();
 
-        for(int cnt=0;cnt<size;cnt++) {
+        //for (int cnt = 0; cnt < size; cnt++) {
 
             //この辺に接続処理とかtime処理とか書いてくらさい
 
             //listの要素を取得
-            listItem=String.valueOf(arrayListRun.get(cnt));
+            String listItem = String.valueOf(arrayListRun.get(0));
 
-            //秒数取得
+            //秒数取得(前進【2秒】の時は2を取得)
             int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
 
             //要素の前からに文字を取得
-            switch (getWords(listItem,2)){
+            switch (getWords(listItem, 2)) {
                 case "前進":
-                    sendBluetooth(ret,FRONT);
+                    sendBluetooth(ret, FRONT);
                     break;
                 case "後退":
-                    sendBluetooth(ret,BACK);
+                    sendBluetooth(ret, BACK);
                     break;
                 case "右折":
-                    sendBluetooth(ret,RIGHT);
+                    sendBluetooth(ret, RIGHT);
                     break;
                 case "左折":
-                    sendBluetooth(ret,LEFT);
+                    sendBluetooth(ret, LEFT);
                     break;
             }
-        }
+        //}
+    }
 
+    //リストの華麗なる復活
+    public void Iwillbeback(){
+        //保存した要素データの読み込み
         String[] arrayList=getArray("array",this);
-
+        //保存数だけ追加処理
         for(int n=0;n<arrayList.length;n++){
-
             arrayListRun.add(arrayList[n]);
-
         }
-
-        //アダプターの更新
-        //adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
-        //アダプターセット
-        //listRun.setAdapter(adapterRun);
-
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
-
     }
     void cancel(){
         handler.removeCallbacks(runnable);
@@ -591,30 +592,33 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 // 遅延処理が完了したときに呼ばれる
                 // 次の遅延処理を呼び出して欲しい
 
+                //リストの最上位の要素消しまーす
+                listCelDelete();
+
                 //TODO ここらへんからテストコード
+//                //リストの中身がまだある時
+//                if (test < 5){
+//                    /*リストの中身を取得
+//
+//
+//                    */
+//                    /*リストの中身を代入
+//                    eventCode = FRONT;
+//                    みたいな
+//                    */
+//                    test++;
+//                    eventCode = test;
+//                    sendBluetooth(3,eventCode);
+//
+//                }else{
+//                    try {
+//                        AndroidComm.mOutputStream.write(sendMessage(0));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    test = 0;
 
-                //リストの中身がまだある時
-                if (test < 5){
-                    /*リストの中身を取得
-
-
-                    */
-                    /*リストの中身を代入
-                    eventCode = FRONT;
-                    みたいな
-                    */
-                    test++;
-                    eventCode = test;
-                    sendBluetooth(3,eventCode);
-
-                }else{
-                    try {
-                        AndroidComm.mOutputStream.write(sendMessage(0));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    test = 0;
-                }
+//                }
 
 
 
