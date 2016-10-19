@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -431,12 +432,12 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);                       //ダイアログの生成
                 //ダイアログのタイトル
                 alertDlg.setTitle(title);
-                final NumberPicker np1 = new NumberPicker(MainActivity.this);                     //ダイアログ中の数字ロール生成
-                np1.setMaxValue(10);                                                                //上限設定
+                final EditText edt1 = new EditText(MainActivity.this);                     //ダイアログ中の数字ロール生成
+                /*np1.setMaxValue(10);                                                                //上限設定
                 np1.setMinValue(1);                                                                 //下限設定
                 //ナンバーピッカーの初期位置を指定
-                np1.setValue(ret);
-                alertDlg.setView(np1);
+                np1.setValue(ret);//*/
+                alertDlg.setView(edt1);
                 alertDlg.setPositiveButton(                                                         //ボタン押された処理
                         "OK",
                         new DialogInterface.OnClickListener() {
@@ -444,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
                                 // OK ボタンクリック処理
 
                                 //選択された要素を編集
-                                arrayListRun.set(touchPos, title + "【" + String.valueOf(np1.getValue()) + "秒】");
+                                arrayListRun.set(touchPos, title + "【" + String.valueOf(edt1.toString()) + "秒】");
 
                                 setList();
                             }
