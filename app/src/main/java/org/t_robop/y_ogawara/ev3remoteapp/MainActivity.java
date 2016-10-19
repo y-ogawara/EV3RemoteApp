@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         setContentView(R.layout.activity_main);
         handler = new Handler(MainActivity.this);
 
-        Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(R.id.stop);
-        runBtn.setVisibility(View.VISIBLE);
-        stopBtn.setVisibility(View.INVISIBLE);
         spinnerSetting();
 
         //リストの関連付け
@@ -93,35 +89,34 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         setListClick();
 
     }
-
     //命令ボタン処理
-    public void command(View v){
-        Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(R.id.stop);
-        switch (String.valueOf(v.getTag())){
-            case "run":
-                if(arrayListRun.size()!=0) {
-                    runBtn.setVisibility(View.INVISIBLE);
-                    stopBtn.setVisibility(View.VISIBLE);
-                    //要素の一時保存
-                    saveArray(arrayListRun, "array", this);
-                    TheRunningMachine();
-                }
-                break;
-            case "stop":
-                runBtn.setVisibility(View.VISIBLE);
-                stopBtn.setVisibility(View.INVISIBLE);
-                cancel();
-                //停止処理
-                sendBluetooth(0,STOP);
-                //allTime = 0;
-                break;
-            case "reset":
-                //リスト全消し
-                listResetMethod();
-                break;
+    public void command(View v) {
+        Button com = (Button) findViewById(R.id.com);
+        if (String.valueOf(com.getText()).equals("実行")) {
+            if (arrayListRun.size() != 0) {
+                //ボタンのテキストを「停止」に変更
+                com.setText("停止");
+                //ボタンのbackgroundを赤に変更
+                com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_stop));
+                //上から処理開始
+                TheRunningMachine();
+            }
+        } else {
+            //停止処理
+            sendBluetooth(1, STOP);
+            //実行されなかったリストの要素を消す
+            arrayListRun.clear();
+            //華麗に復活
+            Iwillbeback();
         }
     }
+
+    //リセットボタンの処理
+    public void reset(View v) {
+        //リスト全消し
+        listResetMethod();
+    }
+
     //移動ボタン処理
     public void move(View v){
         switch (String.valueOf(v.getTag())){
@@ -546,6 +541,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
+        //テキストを「実行」に変更
+        Button com=(Button)findViewById(R.id.com);
+        com.setText("実行");
+        com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
     }
     void cancel(){
         handler.removeCallbacks(runnable);
