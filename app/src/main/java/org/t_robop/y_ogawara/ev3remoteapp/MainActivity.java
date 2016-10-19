@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,7 +28,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Handler.Callback {
+
+    //private final Context context = this;
+    Handler handler = new Handler();
+    int eventCode;
+    int test;
+
+    Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+        //Log.d("test", String.valueOf(allTime));
+        handler.sendEmptyMessage(1);
+    }
+};
+
+
 
     //定数宣言
     final int STOP = 0;
@@ -39,17 +54,15 @@ public class MainActivity extends AppCompatActivity {
     final int TEST = 5;
 
     //sendBluetooth用の変数
-    static int allTime;
+    //int allTime;
 
     String macAddress;
 
     String action;
 
-    /**
-     * リスト関連
-     **/
+    /**リスト関連**/
     //実行する処理のリスト
-    static ListView listRun;
+    ListView listRun;
     //実行する処理用のアダプター
     static ArrayAdapter<String> adapterRun;
     //リスト編集やるためのArrayList
@@ -62,77 +75,60 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        handler = new Handler(MainActivity.this);
 
+        Button runBtn =(Button)findViewById(R.id.run);
+        Button stopBtn =(Button)findViewById(R.id.stop);
+        runBtn.setVisibility(View.VISIBLE);
+        stopBtn.setVisibility(View.INVISIBLE);
         spinnerSetting();
 
+
+
         //リストの関連付け
-        listRun = (ListView) findViewById(R.id.list_run);
+        listRun=(ListView)findViewById(R.id.list_run);
 
         /**list関連の初期設定**/
         //ArrayListの初期化
-        arrayListRun = new ArrayList<String>();
+        arrayListRun=new ArrayList<String>();
+        saveArray(arrayListRun,"array",this);
+
         //アダプターの初期化
-        adapterRun = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayListRun);
+        adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
 
         setListClick();
 
     }
 
     //命令ボタン処理
-    public void command(View v) {
-        Button com = (Button) findViewById(R.id.com);
-        if (String.valueOf(com.getText()).equals("実行")){
-            if (arrayListRun.size() != 0) {
-                //テキストを「停止」に変更
-                com.setText("停止");
-                //上から処理開始
-                TheRunningMachine();
-            }
-        }else{
-            //テキストを「実行」に変更
-            com.setText("実行");
-            //停止処理
-            sendBluetooth(1, STOP);
-            //実行されなかったリストの要素を消す
-            arrayListRun.clear();
-            //華麗に復活
-            Iwillbeback();
+    public void command(View v){
+        Button runBtn =(Button)findViewById(R.id.run);
+        Button stopBtn =(Button)findViewById(R.id.stop);
+        switch (String.valueOf(v.getTag())){
+            case "run":
+                if(arrayListRun.size()!=0) {
+                    runBtn.setVisibility(View.INVISIBLE);
+                    stopBtn.setVisibility(View.VISIBLE);
+                    Iwillbeback();
+                }
+                break;
+            case "stop":
+                runBtn.setVisibility(View.VISIBLE);
+                stopBtn.setVisibility(View.INVISIBLE);
+                cancel();
+                //停止処理
+                sendBluetooth(0,STOP);
+                //allTime = 0;
+                break;
+            case "reset":
+                //リスト全消し
+                listResetMethod();
+                break;
         }
     }
-
-    //リセットボタンの処理
-    public void reset(View v) {
-        //リスト全消し
-        listResetMethod();
-    }
-
-    //
-//    public void comman(View v){
-//        Button runBtn =(Button)findViewById(R.id.run);
-//        Button stopBtn =(Button)findViewById(R.id.stop);
-//        switch (String.valueOf(v.getTag())){
-//            case "run":
-//                if(arrayListRun.size()!=0) {
-//                    runBtn.setVisibility(View.INVISIBLE);
-//                    stopBtn.setVisibility(View.VISIBLE);
-//                    TheRunningMachine();
-//                }
-//                break;
-//            case "stop":
-//                runBtn.setVisibility(View.VISIBLE);
-//                stopBtn.setVisibility(View.INVISIBLE);
-//                //停止処理
-//                sendBluetooth(1,STOP);
-//                break;
-//            case "reset":
-//                //リスト全消し
-//                listResetMethod();
-//                break;
-//        }
-//    }
     //移動ボタン処理
-    public void move(View v) {
-        switch (String.valueOf(v.getTag())) {
+    public void move(View v){
+        switch (String.valueOf(v.getTag())){
             case "front":
                 action = "前進";
                 break;
@@ -179,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     //接続ボタン処理
     public void connect(View v) {
         BluetoothAdapter mBtAdapter = null;
@@ -212,9 +207,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     //spinner設定用メソッド
-    void spinnerSetting() {
+    void spinnerSetting (){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -236,11 +230,10 @@ public class MainActivity extends AppCompatActivity {
                 // 選択されたアイテムを取得
                 String item = (String) spinner.getSelectedItem();
                 // , で文字を分割して保存
-                String addressArray[] = item.split(",", 0);
+                String addressArray[] = item.split(",",0);
                 //macAddressにaddressを入れる
-                macAddress = addressArray[0];
+                macAddress =addressArray[0];
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
@@ -248,161 +241,165 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //指定時間だけ画面の処理を止める
-    public void sendBluetooth(int num, final int event) {
-        num = num * 1000;
-        allTime = allTime + num;
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            //遅延処理したい内容
-            public void run() {
-                try {
-                    AndroidComm.mOutputStream.write(sendMessage(event));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //どんどん消されていくのを防ぐために停止処理の時は要素を消さない
-                if(event!=STOP) {
-                    //最上位の要素消すマン
-                    listCelDelete();
-                }
-                //もし要素が無くなったら
-                if(arrayListRun.size()==0){
-                    //停止処理送るやで
-                    sendBluetooth(1,STOP);
-                    //華麗なる復活
-                    Iwillbeback();
-                }
-            }
-        }, allTime);
+    public void sendBluetooth(int num,int event){
+        num = num*1000;
+
+        //ここでグローバルに入っている
+        eventCode =  event;
+
+        //ここで信号をEV3に送信
+        try {
+            AndroidComm.mOutputStream.write(sendMessage(eventCode));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //ここで指定時間後に
+        handler.postDelayed(runnable, num);
+
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            @Override
+//            //遅延処理したい内容
+//            public void run() {
+//                try {
+//                    AndroidComm.mOutputStream.write(sendMessage(event));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                listCelDelete();
+//            }
+//        }, allTime);
     }
 
     //送信データの生成
     static byte[] sendMessage(int num) {
         byte[] tele = new byte[21];
-        tele[0] = (byte) 19;
-        tele[1] = (byte) 0;
-        tele[2] = (byte) 0;
-        tele[3] = (byte) 0;
-        tele[4] = (byte) 0;
-        tele[5] = (byte) 0;
-        tele[6] = (byte) 0;
+        tele[0] = (byte)19;
+        tele[1] = (byte)0;
+        tele[2] = (byte)0;
+        tele[3] = (byte)0;
+        tele[4] = (byte)0;
+        tele[5] = (byte)0;
+        tele[6] = (byte)0;
 
         //止まるとき
         if (num == 0) {   //Stop Motors at PortC & D
-            tele[7] = (byte) 0xA4;     //OUTPUT_POWER
-            tele[8] = (byte) 0;
-            tele[9] = (byte) 4;     //Motor ID = PortC
-            tele[10] = (byte) 0;     //Motor Power
-            tele[11] = (byte) 0xA6;    //OUTPUT_START
-            tele[12] = (byte) 0;
-            tele[13] = (byte) 4;     //Motor ID = PortC
+            tele[7] = (byte)0xA4;     //OUTPUT_POWER
+            tele[8] = (byte)0;
+            tele[9] = (byte)4;     //Motor ID = PortC
+            tele[10] = (byte)0;     //Motor Power
+            tele[11] = (byte)0xA6;    //OUTPUT_START
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;     //Motor ID = PortC
 
-            tele[14] = (byte) 0xA4;     //OUTPUT_POWER
-            tele[15] = (byte) 0;
-            tele[16] = (byte) 8;     //Motor ID = PortD
-            tele[17] = (byte) 0;     //Motor Power
-            tele[18] = (byte) 0xA6;    //OUTPUT_START
-            tele[19] = (byte) 0;
-            tele[20] = (byte) 8;     //Motor ID = PortD
+            tele[14] = (byte)0xA4;     //OUTPUT_POWER
+            tele[15] = (byte)0;
+            tele[16] = (byte)8;     //Motor ID = PortD
+            tele[17] = (byte)0;     //Motor Power
+            tele[18] = (byte)0xA6;    //OUTPUT_START
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;     //Motor ID = PortD
         }
 
         //進むとき
         if (num == 1) {    //Forward Motors at PortC & D
-            tele[7] = (byte) 0xA4;
-            tele[8] = (byte) 0x00;
-            tele[9] = (byte) 4;
-            tele[10] = (byte) 68;
-            tele[11] = (byte) 0xA6;
-            tele[12] = (byte) 0;
-            tele[13] = (byte) 4;
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)68;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
 
-            tele[14] = (byte) 0xA4;
-            tele[15] = (byte) 0x00;
-            tele[16] = (byte) 8;
-            tele[17] = (byte) 68;
-            tele[18] = (byte) 0xA6;
-            tele[19] = (byte) 0;
-            tele[20] = (byte) 8;
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)68;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
         }
         //バック
         if (num == 2) {    //Backward Motors at PortC & D
-            tele[7] = (byte) 0xA4;
-            tele[8] = (byte) 0x00;
-            tele[9] = (byte) 4;
-            tele[10] = (byte) 40;
-            tele[11] = (byte) 0xA6;
-            tele[12] = (byte) 0;
-            tele[13] = (byte) 4;
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)40;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
 
-            tele[14] = (byte) 0xA4;
-            tele[15] = (byte) 0x00;
-            tele[16] = (byte) 8;
-            tele[17] = (byte) 40;
-            tele[18] = (byte) 0xA6;
-            tele[19] = (byte) 0;
-            tele[20] = (byte) 9;
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)40;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)9;
         }
 
         //右回転
         if (num == 3) {    //Turn Right = Forward Motor at PortC(Left) and Stop PortD(Right)
-            tele[7] = (byte) 0xA4;
-            tele[8] = (byte) 0x00;
-            tele[9] = (byte) 4;
-            tele[10] = (byte) 0;
-            tele[11] = (byte) 0xA6;
-            tele[12] = (byte) 0;
-            tele[13] = (byte) 4;
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)0;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
 
-            tele[14] = (byte) 0xA4;
-            tele[15] = (byte) 0x00;
-            tele[16] = (byte) 8;
-            tele[17] = (byte) 68;
-            tele[18] = (byte) 0xA6;
-            tele[19] = (byte) 0;
-            tele[20] = (byte) 8;
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)68;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
         }
         //左回転
         if (num == 4) {    //Turn Left = Forward Motor at PortD(Right) and Stop PortC(Left)
-            tele[7] = (byte) 0xA4;
-            tele[8] = (byte) 0x00;
-            tele[9] = (byte) 4;
-            tele[10] = (byte) 68;
-            tele[11] = (byte) 0xA6;
-            tele[12] = (byte) 0;
-            tele[13] = (byte) 4;
+            tele[7] = (byte)0xA4;
+            tele[8] = (byte)0x00;
+            tele[9] = (byte)4;
+            tele[10] = (byte)68;
+            tele[11] = (byte)0xA6;
+            tele[12] = (byte)0;
+            tele[13] = (byte)4;
 
-            tele[14] = (byte) 0xA4;
-            tele[15] = (byte) 0x00;
-            tele[16] = (byte) 8;
-            tele[17] = (byte) 0;
-            tele[18] = (byte) 0xA6;
-            tele[19] = (byte) 0;
-            tele[20] = (byte) 8;
+            tele[14] = (byte)0xA4;
+            tele[15] = (byte)0x00;
+            tele[16] = (byte)8;
+            tele[17] = (byte)0;
+            tele[18] = (byte)0xA6;
+            tele[19] = (byte)0;
+            tele[20] = (byte)8;
         }
         //byte配列を返す
         return tele;
     }
 
     //List更新処理(ArrayListの情報をadapter&listに反映すっぞ)
-    public void setList() {
+    public void setList(){
         //アダプターの更新
-        adapterRun = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayListRun);
+        adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
         //アダプターセット
         listRun.setAdapter(adapterRun);
     }
 
     //リストの最上位のみ消す
-    public void listCelDelete() {
-        if (arrayListRun.size() != 0) {
+     public void listCelDelete(){
+        if(arrayListRun.size()!=0) {
             arrayListRun.remove(0);
             adapterRun.notifyDataSetChanged();
-        } else {
-            sendBluetooth(1, 0);
+        }
+        else
+        {
+            //TODO テスト処理で邪魔だったので消しました
+            //sendBluetooth(1,0);
         }
     }
 
     //リストをリセットするメソッド
-    public void listResetMethod() {
+    public void listResetMethod(){
         //リスト全消し
         arrayListRun.clear();
         setList();
@@ -424,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                 String item = (String) listView.getItemAtPosition(pos);
 
                 //文字数へらしてタイトル取得
-                final String title = getWords(item, 2);
+                final String title=getWords(item,2);
 
                 //秒数取得
                 int ret = Integer.parseInt(item.substring(2 - 1).replaceAll("[^0-9]", ""));
@@ -466,68 +463,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //先頭から数えた文字数を取得するメソッド
-    public String getWords(String origin, int num) {
-        return origin.substring(0, num);
-    }
-
-    //リストの処理内容を送るメソッド
-    public void TheRunningMachine() {
-
-        String listItem;
-
-        //リストの内容を保存
-        saveArray(arrayListRun, "array", this);
-
-        //要素数を取得
-        int size = arrayListRun.size();
-
-        //要素数だけ回す
-        for (int cnt = 0; cnt < size; cnt++) {
-
-            //listの要素を取得
-            listItem = String.valueOf(arrayListRun.get(cnt));
-
-            //秒数取得
-            int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
-
-            //要素の前からに文字を取得して送る処理を変える
-            switch (getWords(listItem, 2)) {
-                case "前進":
-                    sendBluetooth(ret, FRONT);
-                    break;
-                case "後退":
-                    sendBluetooth(ret, BACK);
-                    break;
-                case "右折":
-                    sendBluetooth(ret, RIGHT);
-                    break;
-                case "左折":
-                    sendBluetooth(ret, LEFT);
-                    break;
-            }
-        }
-
-    }
-
-    //リストの要素が華麗に復活を果たすメソッド
-    public void Iwillbeback(){
-        //保存した要素を取得
-        String[] arrayList = getArray("array", this);
-        //追加処理
-        for (int n = 0; n < arrayList.length; n++) {
-            arrayListRun.add(arrayList[n]);
-        }
-        //リスト復活(リストの要素データはArrayListに入ってる)
-        setList();
+    public String getWords(String origin,int num){
+        return origin.substring(0,num);
     }
 
     // プリファレンス保存
     // aaa,bbb,ccc... の文字列で保存
-    static public void saveArray(ArrayList<String> array, String PrefKey, Context context) {
+    public void saveArray(ArrayList<String> array, String PrefKey,Context context){
         String str = new String("");
-        for (int i = 0; i < array.size(); i++) {
+        for (int i =0;i<array.size();i++){
             str = str + array.get(i);
-            if (i != array.size() - 1) {
+            if (i !=array.size()-1){
                 str = str + ",";
             }
         }
@@ -538,15 +484,149 @@ public class MainActivity extends AppCompatActivity {
 
     // プリファレンス取得
     // aaa,bbb,ccc...としたものをsplitして返す
-    static public String[] getArray(String PrefKey, Context context) {
+    public String[] getArray(String PrefKey,Context context){
         SharedPreferences prefs2 = context.getSharedPreferences("Array", Context.MODE_PRIVATE);
-        String stringItem = prefs2.getString(PrefKey, "");
-        if (stringItem != null && stringItem.length() != 0) {
+        String stringItem = prefs2.getString(PrefKey,"");
+        if(stringItem != null && stringItem.length() != 0){
             return stringItem.split(",");
-        } else {
+        }else{
             return null;
         }
     }
+
+    //リストをposition0から消していって最後に華麗なる復活を果たす処理
+    public void Iwillbeback(){
+        //allTime = 0;
+        String listItem;
+
+        saveArray(arrayListRun,"array",this);
+
+        int size=arrayListRun.size();
+
+        for(int cnt=0;cnt<size;cnt++) {
+
+            //この辺に接続処理とかtime処理とか書いてくらさい
+
+            //listの要素を取得
+            listItem=String.valueOf(arrayListRun.get(cnt));
+
+            //秒数取得
+            int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
+
+            //要素の前からに文字を取得
+            switch (getWords(listItem,2)){
+                case "前進":
+                    sendBluetooth(ret,FRONT);
+                    break;
+                case "後退":
+                    sendBluetooth(ret,BACK);
+                    break;
+                case "右折":
+                    sendBluetooth(ret,RIGHT);
+                    break;
+                case "左折":
+                    sendBluetooth(ret,LEFT);
+                    break;
+            }
+        }
+
+        String[] arrayList=getArray("array",this);
+
+        for(int n=0;n<arrayList.length;n++){
+
+            arrayListRun.add(arrayList[n]);
+
+        }
+
+        //アダプターの更新
+        //adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
+        //アダプターセット
+        //listRun.setAdapter(adapterRun);
+
+        //リスト復活(リストの要素データはArrayListに入ってる)
+        setList();
+
+    }
+    void cancel(){
+        handler.removeCallbacks(runnable);
+
+    }
+    public void test (View v){
+        sendBluetooth(3,BACK);
+
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("test", String.valueOf(allTime));
+//         /* 処理 */
+//            }
+//        }, allTime); /*1000ミリ秒*/
+//        allTime = 0;
+//        sendBluetooth(0,FRONT);
+//        sendBluetooth(4,RIGHT);
+//        sendBluetooth(4,LEFT);
+//        sendBluetooth(4,FRONT);
+
+    }
+    public void test2(View v){
+//        handler.removeCallbacks(runnable);
+        try {
+            AndroidComm.mOutputStream.write(sendMessage(0));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        //TODO テストコード
+        test = 5;
+
+    }
+    @Override
+    public boolean handleMessage(Message msg) {
+        //コールバックメッセージを取得
+        switch(msg.what){
+            case 0:
+                //エラー用
+                return true;
+            case 1:
+                // 遅延処理が完了したときに呼ばれる
+                // 次の遅延処理を呼び出して欲しい
+
+                //TODO ここらへんからテストコード
+
+                //リストの中身がまだある時
+                if (test < 5){
+                    /*リストの中身を取得
+
+
+                    */
+                    /*リストの中身を代入
+                    eventCode = FRONT;
+                    みたいな
+                    */
+                    test++;
+                    eventCode = test;
+                    sendBluetooth(3,eventCode);
+
+                }else{
+                    try {
+                        AndroidComm.mOutputStream.write(sendMessage(0));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    test = 0;
+                }
+
+
+
+
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
 
 }
                 /*
