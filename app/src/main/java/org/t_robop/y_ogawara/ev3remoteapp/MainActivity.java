@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 //リセットボタンの無効
                 Button reset =(Button) findViewById(R.id.reset);
                 reset.setBackgroundColor(Color.parseColor("#4E342E"));
+                reset.setEnabled(false);
                 //右画面を暗転
                 onFilter();
                 //上から処理開始
