@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 com.setText("停止");
                 //ボタンのbackgroundを赤に変更
                 com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_stop));
+                //リセットボタンの無効
+                Button reset =(Button) findViewById(R.id.reset);
+                reset.setBackgroundColor(Color.parseColor("#4E342E"));
                 //右画面を暗転
                 onFilter();
                 //上から処理開始
@@ -576,6 +579,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
         //右画面の暗転を解除
         offFilter();
+        //リセットボタンの有効
+        Button reset =(Button) findViewById(R.id.reset);
+        reset.setEnabled(true);
+        reset.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_reset));
     }
     void cancel(){
         handler.removeCallbacks(runnable);
