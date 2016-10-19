@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         Button com = (Button) findViewById(R.id.com);
         if (String.valueOf(com.getText()).equals("実行")) {
             if (arrayListRun.size() != 0) {
+                //リストの要素の保存
+                saveArray(arrayListRun,"array",this);
                 //ボタンのテキストを「停止」に変更
                 com.setText("停止");
                 //ボタンのbackgroundを赤に変更
@@ -507,6 +509,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
             //この辺に接続処理とかtime処理とか書いてくらさい
 
+        if(arrayListRun.size()!=0) {
             //listの要素を取得
             String listItem = String.valueOf(arrayListRun.get(0));
 
@@ -528,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                     sendBluetooth(ret, LEFT);
                     break;
             }
-        //}
+        }
     }
 
     //リストの華麗なる復活
@@ -548,7 +551,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
     void cancel(){
         handler.removeCallbacks(runnable);
-
     }
     public void test (View v){
         sendBluetooth(3,BACK);
