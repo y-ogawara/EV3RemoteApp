@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     //リストのどの要素をクリックしたかを知るためのグローバル変数
     int touchPos;
 
+    Button com;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,12 +88,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //アダプターの初期化
         adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
 
+        com = (Button) findViewById(R.id.com);
+
         setListClick();
 
     }
     //命令ボタン処理
     public void command(View v) {
-        Button com = (Button) findViewById(R.id.com);
         if (String.valueOf(com.getText()).equals("実行")) {
             if (arrayListRun.size() != 0) {
                 //リストの要素の保存
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             }
         } else {
             //停止処理
-            sendBluetooth(1, STOP);
+            cancel();
             //実行されなかったリストの要素を消す
             arrayListRun.clear();
             //華麗に復活
@@ -386,15 +389,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             arrayListRun.remove(0);
             //リスト適用
             adapterRun.notifyDataSetChanged();
-
             //次のデータ送信
             TheRunningMachine();
         }
         //要素無い時
         else {
             //要素無いので停止
-            sendBluetooth(0,STOP);
-
+            test2();
             //華麗なる復活
             Iwillbeback();
         }
@@ -532,6 +533,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                     break;
             }
         }
+        else {
+            cancel();
+            Iwillbeback();
+        }
     }
 
     //リストの華麗なる復活
@@ -545,12 +550,18 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
         //テキストを「実行」に変更
-        Button com=(Button)findViewById(R.id.com);
         com.setText("実行");
         com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
     }
     void cancel(){
         handler.removeCallbacks(runnable);
+        try {
+            AndroidComm.mOutputStream.write(sendMessage(0));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
     public void test (View v){
         sendBluetooth(3,BACK);
@@ -569,7 +580,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 //        sendBluetooth(4,FRONT);
 
     }
-    public void test2(View v){
+    public void test2(){
 //        handler.removeCallbacks(runnable);
         try {
             AndroidComm.mOutputStream.write(sendMessage(0));
