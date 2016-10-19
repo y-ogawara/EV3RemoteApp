@@ -542,6 +542,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             //秒数取得(前進【2秒】の時は2を取得)
             int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
 
+            listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
+
             //要素の前からに文字を取得
             switch (getWords(listItem, 2)) {
                 case "前進":
@@ -559,7 +561,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             }
         }
         else {
+            //強制停止
             cancel();
+            //リスト復活
             Iwillbeback();
         }
     }
@@ -638,42 +642,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 //リストの最上位の要素消しまーす
                 listCelDelete();
 
-                //TODO ここらへんからテストコード
-//                //リストの中身がまだある時
-//                if (test < 5){
-//                    /*リストの中身を取得
-//
-//
-//                    */
-//                    /*リストの中身を代入
-//                    eventCode = FRONT;
-//                    みたいな
-//                    */
-//                    test++;
-//                    eventCode = test;
-//                    sendBluetooth(3,eventCode);
-//
-//                }else{
-//                    try {
-//                        AndroidComm.mOutputStream.write(sendMessage(0));
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    test = 0;
-
-//                }
-
-
-
-
                 return true;
             default:
                 return false;
         }
     }
-
-
-
 }
                 /*
                 EV3を動かしたいときはこのコードを使ってください
