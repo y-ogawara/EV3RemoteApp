@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         handler.sendEmptyMessage(1);
     }
 };
-    
+
     //定数宣言
     final int STOP = 0;
     final int FRONT = 1;
@@ -103,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 com.setText("停止");
                 //ボタンのbackgroundを赤に変更
                 com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_stop));
+                //右画面を暗転
+                onFilter();
                 //上から処理開始
                 TheRunningMachine();
             }
@@ -116,6 +120,39 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
     }
 
+    public void onFilter(){
+        //暗転
+        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
+        linearLayout.setBackgroundColor(Color.parseColor("#424242"));
+        //ボタンの無効
+        Button connect =(Button)findViewById(R.id.connect);
+        Button front =(Button)findViewById(R.id.front);
+        Button back =(Button)findViewById(R.id.back);
+        Button left =(Button)findViewById(R.id.left);
+        Button right =(Button)findViewById(R.id.right);
+        connect.setVisibility(View.INVISIBLE);
+        front.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
+        left.setVisibility(View.INVISIBLE);
+        right.setVisibility(View.INVISIBLE);
+    }
+    public void offFilter(){
+        //暗転解除
+        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
+        linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        //ボタンの有効
+        Button connect =(Button)findViewById(R.id.connect);
+        Button front =(Button)findViewById(R.id.front);
+        Button back =(Button)findViewById(R.id.back);
+        Button left =(Button)findViewById(R.id.left);
+        Button right =(Button)findViewById(R.id.right);
+        connect.setVisibility(View.VISIBLE);
+        connect.setVisibility(View.VISIBLE);
+        front.setVisibility(View.VISIBLE);
+        back.setVisibility(View.VISIBLE);
+        left.setVisibility(View.VISIBLE);
+        right.setVisibility(View.VISIBLE);
+    }
     //リセットボタンの処理
     public void reset(View v) {
         //リスト全消し
@@ -537,6 +574,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //テキストを「実行」に変更
         com.setText("実行");
         com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
+        //右画面の暗転を解除
+        offFilter();
     }
     void cancel(){
         handler.removeCallbacks(runnable);
