@@ -31,15 +31,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements Handler.Callback {
 
-    //private final Context context = this;
+    //ハンドラ宣言
     Handler handler = new Handler();
-    int eventCode;
-    int test;
 
     Runnable runnable = new Runnable() {
     @Override
     public void run() {
-        //Log.d("test", String.valueOf(allTime));
         handler.sendEmptyMessage(1);
     }
 };
@@ -52,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     final int LEFT = 4;
     final int TEST = 5;
 
-    //sendBluetooth用の変数
-    //int allTime;
 
     String macAddress;
 
@@ -219,12 +214,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-        //00:16:53:44:69:AB   org.t_robop.y_ogawara.ev3remoteapp.ev3 青
-        //00:16:53:44:59:C0   org.t_robop.y_ogawara.ev3remoteapp.ev3 緑
-        //00:16:53:43:DE:A0   org.t_robop.y_ogawara.ev3remoteapp.ev3 灰色
-
-
         BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
 
         AndroidComm.getInstance().setDevice(device); // Set device
@@ -282,30 +271,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     public void sendBluetooth(int num,int event){
         num = num*1000;
 
-        //ここでグローバルに入っている
-        eventCode =  event;
-
         //ここで信号をEV3に送信
         try {
-            AndroidComm.mOutputStream.write(sendMessage(eventCode));
+            AndroidComm.mOutputStream.write(sendMessage(event));
         } catch (IOException e) {
             e.printStackTrace();
         }
         //ここで指定時間後に
         handler.postDelayed(runnable, num);
 
-//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//            @Override
-//            //遅延処理したい内容
-//            public void run() {
-//                try {
-//                    AndroidComm.mOutputStream.write(sendMessage(event));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                listCelDelete();
-//            }
-//        }, allTime);
+
     }
 
     //送信データの生成
@@ -590,8 +565,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         reset.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_reset));
     }
     void cancel(){
+        //念のためハンドラを終了
         handler.removeCallbacks(runnable);
         try {
+            //ev3に終了命令を飛ばす
             AndroidComm.mOutputStream.write(sendMessage(0));
 
         } catch (IOException e) {
@@ -599,36 +576,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
         }
     }
-    public void test (View v){
-        sendBluetooth(3,BACK);
 
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d("test", String.valueOf(allTime));
-//         /* 処理 */
-//            }
-//        }, allTime); /*1000ミリ秒*/
-//        allTime = 0;
-//        sendBluetooth(0,FRONT);
-//        sendBluetooth(4,RIGHT);
-//        sendBluetooth(4,LEFT);
-//        sendBluetooth(4,FRONT);
-
-    }
-    public void test2(){
-//        handler.removeCallbacks(runnable);
-        try {
-            AndroidComm.mOutputStream.write(sendMessage(0));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-        //TODO テストコード
-        test = 5;
-
-    }
     @Override
     public boolean handleMessage(Message msg) {
         //コールバックメッセージを取得
@@ -649,23 +597,3 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
     }
 }
-                /*
-                EV3を動かしたいときはこのコードを使ってください
-
-                TODO:一度実行したらallTimeを初期化してください
-
-                左側の変数 遅延時間
-                右側の変数 なにをしたいか(中身はint)
-
-                例
-                sendBluetooth(0,FRONT);
-                sendBluetooth(3,LEFT);
-                sendBluetooth(2,FRONT);
-                sendBluetooth(4,STOP);
-
-                すぐに前進
-                3病後に左回転開始
-                2秒後に右回転開始
-                4秒後にストップ
-
-                */
