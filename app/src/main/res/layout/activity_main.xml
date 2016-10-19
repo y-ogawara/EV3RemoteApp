@@ -33,7 +33,7 @@
                     android:id="@+id/com"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="#2196f3"
+                    android:background="@drawable/color_run"
                     android:onClick="command"
                     android:tag="run"
                     android:text="実行" />
@@ -45,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:backgroundTint="#FFEB3B"
+                android:background="@drawable/color_reset"
                 android:onClick="reset"
                 android:tag="reset"
                 android:text="リセット" />
@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/rightScreen"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="7"
@@ -91,7 +92,7 @@
                         android:id="@+id/connect"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:backgroundTint="#CDDC39"
+                        android:background="@drawable/color_connect"
                         android:onClick="connect"
                         android:text="接続"
                         android:textSize="25dp" />

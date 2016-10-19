@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,20 +33,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements Handler.Callback {
 
-    //private final Context context = this;
+    //ハンドラ宣言
     Handler handler = new Handler();
-    int eventCode;
-    int test;
 
     Runnable runnable = new Runnable() {
     @Override
     public void run() {
-        //Log.d("test", String.valueOf(allTime));
         handler.sendEmptyMessage(1);
     }
 };
-
-
 
     //定数宣言
     final int STOP = 0;
@@ -53,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     final int LEFT = 4;
     final int TEST = 5;
 
-    //sendBluetooth用の変数
-    //int allTime;
 
     String macAddress;
 
@@ -85,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     TextView dialogText;
 
 
+    Button com;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         setContentView(R.layout.activity_main);
         handler = new Handler(MainActivity.this);
         spinnerSetting();
-
-
 
         //リストの関連付け
         listRun=(ListView)findViewById(R.id.list_run);
@@ -113,33 +108,82 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //ダイアログ内の関連付け
         dialogEdit =(EditText)inputView.findViewById(R.id.dialog_edit);
         dialogText=(TextView)inputView.findViewById(R.id.dialog_text);
+        com = (Button) findViewById(R.id.com);
 
         setListClick();
 
         setDialog();
 
     }
-
     //命令ボタン処理
-    public void command(View v){
-        switch (String.valueOf(v.getTag())){
-            case "run":
-                if(arrayListRun.size()!=0) {
-                    Iwillbeback();
-                }
-                break;
-            case "stop":
-                cancel();
-                //停止処理
-                sendBluetooth(0,STOP);
-                //allTime = 0;
-                break;
-            case "reset":
-                //リスト全消し
-                listResetMethod();
-                break;
+    public void command(View v) {
+        if (String.valueOf(com.getText()).equals("実行")) {
+            if (arrayListRun.size() != 0) {
+                //リストの要素の保存
+                saveArray(arrayListRun,"array",this);
+                //ボタンのテキストを「停止」に変更
+                com.setText("停止");
+                //ボタンのbackgroundを赤に変更
+                com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_stop));
+                //リセットボタンの無効
+                Button reset =(Button) findViewById(R.id.reset);
+                reset.setBackgroundColor(Color.parseColor("#4E342E"));
+                reset.setEnabled(false);
+                //右画面を暗転
+                onFilter();
+                //上から処理開始
+                TheRunningMachine();
+            }
+        } else {
+            //停止処理
+            cancel();
+            //実行されなかったリストの要素を消す
+            arrayListRun.clear();
+            //華麗に復活
+            Iwillbeback();
         }
     }
+
+    public void onFilter(){
+        //暗転
+        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
+        linearLayout.setBackgroundColor(Color.parseColor("#424242"));
+        //ボタンの無効
+        Button connect =(Button)findViewById(R.id.connect);
+        Button front =(Button)findViewById(R.id.front);
+        Button back =(Button)findViewById(R.id.back);
+        Button left =(Button)findViewById(R.id.left);
+        Button right =(Button)findViewById(R.id.right);
+        connect.setVisibility(View.INVISIBLE);
+        front.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
+        left.setVisibility(View.INVISIBLE);
+        right.setVisibility(View.INVISIBLE);
+    }
+    public void offFilter(){
+        //暗転解除
+        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
+        linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        //ボタンの有効
+        Button connect =(Button)findViewById(R.id.connect);
+        Button front =(Button)findViewById(R.id.front);
+        Button back =(Button)findViewById(R.id.back);
+        Button left =(Button)findViewById(R.id.left);
+        Button right =(Button)findViewById(R.id.right);
+        connect.setVisibility(View.VISIBLE);
+        connect.setVisibility(View.VISIBLE);
+        front.setVisibility(View.VISIBLE);
+        back.setVisibility(View.VISIBLE);
+        left.setVisibility(View.VISIBLE);
+        right.setVisibility(View.VISIBLE);
+    }
+    //リセットボタンの処理
+    public void reset(View v) {
+        //リスト全消し
+        listResetMethod();
+    }
+
+
     //移動ボタン処理
     public void move(View v) {
         switch (String.valueOf(v.getTag())) {
@@ -202,12 +246,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-        //00:16:53:44:69:AB   org.t_robop.y_ogawara.ev3remoteapp.ev3 青
-        //00:16:53:44:59:C0   org.t_robop.y_ogawara.ev3remoteapp.ev3 緑
-        //00:16:53:43:DE:A0   org.t_robop.y_ogawara.ev3remoteapp.ev3 灰色
-
-
         BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
 
         AndroidComm.getInstance().setDevice(device); // Set device
@@ -266,30 +304,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         num = num*1000;
         int num2 = (int)num;
 
-        //ここでグローバルに入っている
-        eventCode =  event;
-
         //ここで信号をEV3に送信
         try {
-            AndroidComm.mOutputStream.write(sendMessage(eventCode));
+            AndroidComm.mOutputStream.write(sendMessage(event));
         } catch (IOException e) {
             e.printStackTrace();
         }
         //ここで指定時間後に
         handler.postDelayed(runnable, num2);
 
-//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//            @Override
-//            //遅延処理したい内容
-//            public void run() {
-//                try {
-//                    AndroidComm.mOutputStream.write(sendMessage(event));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                listCelDelete();
-//            }
-//        }, allTime);
+
     }
 
     //送信データの生成
@@ -417,14 +441,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //リストの最上位のみ消す
      public void listCelDelete(){
+         //要素がまだある時
         if(arrayListRun.size()!=0) {
+            //最上位の要素消す
             arrayListRun.remove(0);
+            //リスト適用
             adapterRun.notifyDataSetChanged();
-        }
-        else
-        {
-            //TODO テスト処理で邪魔だったので消しました
-            //sendBluetooth(1,0);
+            //次のデータ送信
+            TheRunningMachine();
         }
     }
 
@@ -508,93 +532,76 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
     }
 
-    //リストをposition0から消していって最後に華麗なる復活を果たす処理
-    public void Iwillbeback(){
-        //allTime = 0;
-        String listItem;
+    //リストのposition0の内容に応じた処理を送信するメソッド
+    public void TheRunningMachine() {
+        //この辺に接続処理とかtime処理とか書いてくらさい
 
-        saveArray(arrayListRun,"array",this);
-
-        int size=arrayListRun.size();
-
-        for(int cnt=0;cnt<size;cnt++) {
-
-            //この辺に接続処理とかtime処理とか書いてくらさい
-
+        if(arrayListRun.size()!=0) {
             //listの要素を取得
-            listItem=String.valueOf(arrayListRun.get(cnt));
+            String listItem = String.valueOf(arrayListRun.get(0));
 
             //秒数取得
             float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
 
+            listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
+
             //要素の前からに文字を取得
-            switch (getWords(listItem,2)){
+            switch (getWords(listItem, 2)) {
                 case "前進":
-                    sendBluetooth(ret,FRONT);
+                    sendBluetooth(ret, FRONT);
                     break;
                 case "後退":
-                    sendBluetooth(ret,BACK);
+                    sendBluetooth(ret, BACK);
                     break;
                 case "右折":
-                    sendBluetooth(ret,RIGHT);
+                    sendBluetooth(ret, RIGHT);
                     break;
                 case "左折":
-                    sendBluetooth(ret,LEFT);
+                    sendBluetooth(ret, LEFT);
                     break;
             }
         }
-
-        String[] arrayList=getArray("array",this);
-
-        for(int n=0;n<arrayList.length;n++){
-
-            arrayListRun.add(arrayList[n]);
-
+        else {
+            //強制停止
+            cancel();
+            //リスト復活
+            Iwillbeback();
         }
+    }
 
-        //アダプターの更新
-        //adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
-        //アダプターセット
-        //listRun.setAdapter(adapterRun);
-
+    //リストの華麗なる復活
+    public void Iwillbeback(){
+        //保存した要素データの読み込み
+        String[] arrayList=getArray("array",this);
+        //保存数だけ追加処理
+        for(int n=0;n<arrayList.length;n++){
+            arrayListRun.add(arrayList[n]);
+        }
         //リスト復活(リストの要素データはArrayListに入ってる)
         setList();
-
+        //テキストを「実行」に変更
+        com.setText("実行");
+        com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
+        //右画面の暗転を解除
+        offFilter();
+        //リセットボタンの有効
+        Button reset =(Button) findViewById(R.id.reset);
+        reset.setEnabled(true);
+        reset.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_reset));
     }
     void cancel(){
+        //念のためハンドラを終了
         handler.removeCallbacks(runnable);
-
-    }
-    public void test (View v){
-        sendBluetooth(3,BACK);
-
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d("test", String.valueOf(allTime));
-//         /* 処理 */
-//            }
-//        }, allTime); /*1000ミリ秒*/
-//        allTime = 0;
-//        sendBluetooth(0,FRONT);
-//        sendBluetooth(4,RIGHT);
-//        sendBluetooth(4,LEFT);
-//        sendBluetooth(4,FRONT);
-
-    }
-    public void test2(View v){
-//        handler.removeCallbacks(runnable);
         try {
+            //ev3に終了命令を飛ばす
             AndroidComm.mOutputStream.write(sendMessage(0));
 
         } catch (IOException e) {
             e.printStackTrace();
 
         }
-        //TODO テストコード
-        test = 5;
-
     }
+
     @Override
     public boolean handleMessage(Message msg) {
         //コールバックメッセージを取得
@@ -606,60 +613,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 // 遅延処理が完了したときに呼ばれる
                 // 次の遅延処理を呼び出して欲しい
 
-                //TODO ここらへんからテストコード
-
-                //リストの中身がまだある時
-                if (test < 5){
-                    /*リストの中身を取得
-
-
-                    */
-                    /*リストの中身を代入
-                    eventCode = FRONT;
-                    みたいな
-                    */
-                    test++;
-                    eventCode = test;
-                    sendBluetooth(3,eventCode);
-
-                }else{
-                    try {
-                        AndroidComm.mOutputStream.write(sendMessage(0));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    test = 0;
-                }
-
-
-
+                //リストの最上位の要素消しまーす
+                listCelDelete();
 
                 return true;
             default:
                 return false;
         }
     }
-
-
-
 }
-                /*
-                EV3を動かしたいときはこのコードを使ってください
-
-                TODO:一度実行したらallTimeを初期化してください
-
-                左側の変数 遅延時間
-                右側の変数 なにをしたいか(中身はint)
-
-                例
-                sendBluetooth(0,FRONT);
-                sendBluetooth(3,LEFT);
-                sendBluetooth(2,FRONT);
-                sendBluetooth(4,STOP);
-
-                すぐに前進
-                3病後に左回転開始
-                2秒後に右回転開始
-                4秒後にストップ
-
-                */
