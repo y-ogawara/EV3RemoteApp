@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.t_robop.y_ogawara.ev3remoteapp.ev3.AndroidComm;
@@ -70,17 +72,27 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     //リストのどの要素をクリックしたかを知るためのグローバル変数
     int touchPos;
 
+    /**ダイアログ設定関連**/
+    //ダイアログ
+    AlertDialog alertDlg;
+    //ダイアログ内の処理分け用グローバル変数(0:追加処理,1:編集処理)
+    int NUM;
+
+    /**ダイアログレイアウト関連**/
+    //ダイアログのレイアウトを取得するView
+    View inputView;
+    //ダイアログ内のEditText(こいつを弄ることで何処からでもダイアログ内のEditTextを弄れるゾ！)
+    EditText dialogEdit;
+    //ダイアログ内のTextView(こいつを弄ることで何処からでもダイアログ内のTextViewを弄れるゾ！)
+    TextView dialogText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         handler = new Handler(MainActivity.this);
-
-        Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(R.id.stop);
-        runBtn.setVisibility(View.VISIBLE);
-        stopBtn.setVisibility(View.INVISIBLE);
         spinnerSetting();
 
 
@@ -96,25 +108,27 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //アダプターの初期化
         adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
 
+        /**ダイアログレイアウトの呼び出し**/
+        //ダイアログレイアウトの読み込み
+        LayoutInflater factory = LayoutInflater.from(this);
+        inputView = factory.inflate(R.layout.dialog_edit, null);
+        //ダイアログ内の関連付け
+        dialogEdit =(EditText)inputView.findViewById(R.id.dialog_edit);
+        dialogText=(TextView)inputView.findViewById(R.id.dialog_text);
+
         setListClick();
 
     }
 
     //命令ボタン処理
     public void command(View v){
-        Button runBtn =(Button)findViewById(R.id.run);
-        Button stopBtn =(Button)findViewById(R.id.stop);
         switch (String.valueOf(v.getTag())){
             case "run":
                 if(arrayListRun.size()!=0) {
-                    runBtn.setVisibility(View.INVISIBLE);
-                    stopBtn.setVisibility(View.VISIBLE);
                     Iwillbeback();
                 }
                 break;
             case "stop":
-                runBtn.setVisibility(View.VISIBLE);
-                stopBtn.setVisibility(View.INVISIBLE);
                 cancel();
                 //停止処理
                 sendBluetooth(0,STOP);
@@ -143,35 +157,37 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 break;
         }
         //********************************************************************//
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);                       //ダイアログの生成
-        //ダイアログのタイトル
-        alertDlg.setTitle(action);
-        final NumberPicker np1 = new NumberPicker(MainActivity.this);                     //ダイアログ中の数字ロール生成
-        np1.setMaxValue(10);                                                                //上限設定
-        np1.setMinValue(1);                                                                 //下限設定
-        //ナンバーピッカーの初期位置を指定できる
-        //np1.setValue(0);
-        alertDlg.setView(np1);
-        alertDlg.setPositiveButton(                                                         //ボタン押された処理
-                "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // OK ボタンクリック処理
-                        String second = String.valueOf(np1.getValue());
-                        arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
-                        setList();
-                    }
-                });
-        alertDlg.setNegativeButton(
-                "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Cancel ボタンクリック処理
-                    }
-                });
+        if(alertDlg==null) {
+            AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);                       //ダイアログの生成
+            //ダイアログのタイトル
+            alertDlg.setTitle(action);
+            final EditText edt2 = new EditText(MainActivity.this);                     //ダイアログ中の数字ロール生成
+            /*np1.setMaxValue(10);                                                                //上限設定
+            np1.setMinValue(1);                                                                 //下限設定
+            //ナンバーピッカーの初期位置を指定できる
+            //np1.setValue(0);//*/
+            alertDlg.setView(edt2);
+            alertDlg.setPositiveButton(                                                         //ボタン押された処理
+                    "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // OK ボタンクリック処理
+                            String second = String.valueOf(edt2.getText().toString());
+                            arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
+                            setList();
+                        }
+                    });
+            alertDlg.setNegativeButton(
+                    "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Cancel ボタンクリック処理
+                        }
+                    });
 
-        // 表示
-        alertDlg.create().show();
+            // 表示
+            alertDlg.create().show();
+        }
 
 
     }
@@ -241,8 +257,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
 
     //指定時間だけ画面の処理を止める
-    public void sendBluetooth(int num,int event){
+    public void sendBluetooth(float num,int event){
         num = num*1000;
+        int num2 = (int)num;
 
         //ここでグローバルに入っている
         eventCode =  event;
@@ -254,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             e.printStackTrace();
         }
         //ここで指定時間後に
-        handler.postDelayed(runnable, num);
+        handler.postDelayed(runnable, num2);
 
 //        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 //            @Override
@@ -385,6 +402,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         listRun.setAdapter(adapterRun);
     }
 
+    //新規追加用に一度edittextをクリーンできるメソッド
+    public void resetEdit(EditText edit,TextView view){
+        //edittextの内容を削除
+        edit.getEditableText().clear();
+        //textView(edittext以外のView)にフォーカスを移す
+        view.requestFocus();
+    }
+
     //リストの最上位のみ消す
      public void listCelDelete(){
         if(arrayListRun.size()!=0) {
@@ -405,6 +430,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         setList();
     }
 
+    //タイトルと設定した数字でダイアログが表示されます
+    public void showDialog(String title,int another){
+        //追加処理or編集処理
+        NUM=another;
+        //指定されたタイトルをダイアログ内のTextViewにセット
+        dialogText.setText(title);
+        //ダイアログ展開
+        alertDlg.show();
+    }
+
     //リストの要素クリックした時
     public void setListClick() {
 
@@ -420,43 +455,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(pos);
 
-                //文字数へらしてタイトル取得
-                final String title=getWords(item,2);
-
                 //秒数取得
-                int ret = Integer.parseInt(item.substring(2 - 1).replaceAll("[^0-9]", ""));
+                float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9]", ""));
+                //数値がある時(安全設計)
+                if(String.valueOf(ret)!="") {
+                    //ダイアログ内のedittextに貼る
+                    dialogEdit.setText(String.valueOf(ret));
+                }
 
-                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);                       //ダイアログの生成
-                //ダイアログのタイトル
-                alertDlg.setTitle(title);
-                final EditText edt1 = new EditText(MainActivity.this);                     //ダイアログ中の数字ロール生成
-                /*np1.setMaxValue(10);                                                                //上限設定
-                np1.setMinValue(1);                                                                 //下限設定
-                //ナンバーピッカーの初期位置を指定
-                np1.setValue(ret);//*/
-                alertDlg.setView(edt1);
-                alertDlg.setPositiveButton(                                                         //ボタン押された処理
-                        "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // OK ボタンクリック処理
-
-                                //選択された要素を編集
-                                arrayListRun.set(touchPos, title + "【" + String.valueOf(edt1.toString()) + "秒】");
-
-                                setList();
-                            }
-                        });
-                alertDlg.setNegativeButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Cancel ボタンクリック処理
-                            }
-                        });
-
-                // 表示
-                alertDlg.create().show();
+                //ここで編集用ダイアログ出す
+                showDialog(getWords(item,2),1);//先頭二文字をタイトルに
 
             }
         });
@@ -511,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             listItem=String.valueOf(arrayListRun.get(cnt));
 
             //秒数取得
-            int ret = Integer.parseInt(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
+            float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
 
             //要素の前からに文字を取得
             switch (getWords(listItem,2)){
