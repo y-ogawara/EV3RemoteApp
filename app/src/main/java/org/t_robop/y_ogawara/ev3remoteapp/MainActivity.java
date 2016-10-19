@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
         setListClick();
 
+        setDialog();
+
     }
 
     //命令ボタン処理
@@ -139,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
     }
     //移動ボタン処理
-    public void move(View v){
-        switch (String.valueOf(v.getTag())){
+    public void move(View v) {
+        switch (String.valueOf(v.getTag())) {
             case "front":
                 action = "前進";
                 break;
@@ -154,37 +156,42 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 action = "後退";
                 break;
         }
+        resetEdit(dialogEdit,dialogText);
+        showDialog(action,0);
+    }
         //********************************************************************//
+    public void setDialog(){
         if(alertDlg==null) {
-            AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);                       //ダイアログの生成
-            //ダイアログのタイトル
-            alertDlg.setTitle(action);
-            final EditText edt2 = new EditText(MainActivity.this);                     //ダイアログ中の数字ロール生成
-            /*np1.setMaxValue(10);                                                                //上限設定
-            np1.setMinValue(1);                                                                 //下限設定
-            //ナンバーピッカーの初期位置を指定できる
-            //np1.setValue(0);//*/
-            alertDlg.setView(edt2);
-            alertDlg.setPositiveButton(                                                         //ボタン押された処理
+            alertDlg = new AlertDialog.Builder(MainActivity.this)                       //ダイアログの生成
+            .setTitle(action)
+            .setView(inputView)
+            .setPositiveButton(                                                         //ボタン押された処理
                     "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
-                            String second = String.valueOf(edt2.getText().toString());
-                            arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
-                            setList();
+                            if (dialogEdit.getText().toString().length() != 0) {
+                                float second = Float.parseFloat(dialogEdit.getText().toString());
+                                if (NUM == 0) {
+                                    arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
+                                } else if (NUM == 1) {
+                                    //選択された要素を編集
+                                    arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
+                                }
+                                setList();
+                            }
                         }
-                    });
-            alertDlg.setNegativeButton(
+                    })
+            .setNegativeButton(
                     "Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // Cancel ボタンクリック処理
                         }
-                    });
+                    })
 
             // 表示
-            alertDlg.create().show();
+            .create();
         }
 
 
@@ -455,6 +462,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
                 //秒数取得
                 float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9]", ""));
+                ret = ret/10;
                 //数値がある時(安全設計)
                 if(String.valueOf(ret)!="") {
                     //ダイアログ内のedittextに貼る
