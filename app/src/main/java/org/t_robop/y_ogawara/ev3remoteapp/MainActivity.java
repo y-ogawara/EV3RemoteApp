@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         listResetMethod();
     }
 
+
     //移動ボタン処理
     public void move(View v){
         switch (String.valueOf(v.getTag())){
