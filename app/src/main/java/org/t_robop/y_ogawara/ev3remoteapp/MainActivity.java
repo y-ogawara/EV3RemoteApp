@@ -79,8 +79,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     EditText dialogEdit;
     //ダイアログ内のTextView(こいつを弄ることで何処からでもダイアログ内のTextViewを弄れるゾ！)
     TextView dialogText;
-    
+
+    /**ボタン関連**/
     Button com;
+    LinearLayout linearLayout;
+    Button connect;
+    Button front;
+    Button back;
+    Button left;
+    Button right;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +116,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         dialogEdit =(EditText)inputView.findViewById(R.id.dialog_edit);
         dialogText=(TextView)inputView.findViewById(R.id.dialog_text);
         com = (Button) findViewById(R.id.com);
+        linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
+        connect =(Button)findViewById(R.id.connect);
+        front =(Button)findViewById(R.id.front);
+        back =(Button)findViewById(R.id.back);
+        left =(Button)findViewById(R.id.left);
+        right =(Button)findViewById(R.id.right);
+        spinner =(Spinner)findViewById(R.id.spinner);
 
         setListClick();
 
@@ -145,36 +160,28 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     public void onFilter(){
         //暗転
-        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
         linearLayout.setBackgroundColor(Color.parseColor("#424242"));
         //ボタンの無効
-        Button connect =(Button)findViewById(R.id.connect);
-        Button front =(Button)findViewById(R.id.front);
-        Button back =(Button)findViewById(R.id.back);
-        Button left =(Button)findViewById(R.id.left);
-        Button right =(Button)findViewById(R.id.right);
         connect.setVisibility(View.INVISIBLE);
         front.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
         left.setVisibility(View.INVISIBLE);
         right.setVisibility(View.INVISIBLE);
+        //スピナーの無効
+        spinner.setVisibility(View.INVISIBLE);
     }
     public void offFilter(){
         //暗転解除
-        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
         linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
         //ボタンの有効
-        Button connect =(Button)findViewById(R.id.connect);
-        Button front =(Button)findViewById(R.id.front);
-        Button back =(Button)findViewById(R.id.back);
-        Button left =(Button)findViewById(R.id.left);
-        Button right =(Button)findViewById(R.id.right);
         connect.setVisibility(View.VISIBLE);
         connect.setVisibility(View.VISIBLE);
         front.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         left.setVisibility(View.VISIBLE);
         right.setVisibility(View.VISIBLE);
+        //スピナーの有効
+        spinner.setVisibility(View.VISIBLE);
     }
     //リセットボタンの処理
     public void reset(View v) {
