@@ -109,7 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
-                        android:tag="front"
+                        android:background="@drawable/color_move"                        android:tag="front"
                         android:text="前進"
                         android:textSize="25dp" />
                 </LinearLayout>
@@ -120,21 +120,6 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:text="Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/button8"
-                        android:layout_weight="1"
-                        android:onClick="test" />
-
-                    <Button
-                        android:text="Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/button9"
-                        android:layout_weight="1"
-                        android:onClick="test2" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -155,6 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:background="@drawable/color_move"
                         android:tag="left"
                         android:text="左回転"
                         android:textSize="25dp" />
@@ -179,6 +165,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:background="@drawable/color_move"
                         android:tag="right"
                         android:text="右回転"
                         android:textSize="25dp" />
@@ -210,6 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="move"
+                        android:background="@drawable/color_move"
                         android:tag="back"
                         android:text="後退"
                         android:textSize="25dp" />
