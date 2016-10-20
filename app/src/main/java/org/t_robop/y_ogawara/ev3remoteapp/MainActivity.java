@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // アイテムを追加します
         adapter.add("00:16:53:44:69:AB,ev3青");
-        adapter.add("00:16:53:44:59:C0,eb3緑");
+        adapter.add("00:16:53:44:59:C0,ev3緑");
         adapter.add("00:16:53:43:DE:A0,ev3灰色");
 
         //スピナーの関連付け
