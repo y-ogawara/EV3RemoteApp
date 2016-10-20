@@ -265,6 +265,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             Toast.makeText(this, "接続成功！", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
+            //接続が失敗したらnullに
+            mBtAdapter = null;
         }
 
         // キーボードを強制的に隠せてない
