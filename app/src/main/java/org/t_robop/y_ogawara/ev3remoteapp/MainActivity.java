@@ -481,8 +481,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 String item = (String) listView.getItemAtPosition(pos);
 
                 //秒数取得
-                float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9]", ""));
-                ret = ret/10;
+                float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9+\\.]", ""));
                 //数値がある時(安全設計)
                 if(String.valueOf(ret)!="") {
                     //ダイアログ内のedittextに貼る
