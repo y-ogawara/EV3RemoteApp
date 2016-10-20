@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             //ev3未接続時に落ちないように
             if (mBtAdapter == null){
                 Toast.makeText(this, "接続ボタンを押してね！", Toast.LENGTH_LONG).show();
+                return;
             }
             if (arrayListRun.size() != 0) {
                 //リストの要素の保存
