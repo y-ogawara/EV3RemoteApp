@@ -218,15 +218,19 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
-                            if (dialogEdit.getText().toString().length() != 0) {
-                                float second = Float.parseFloat(dialogEdit.getText().toString());
-                                if (NUM == 0) {
-                                    arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
-                                } else if (NUM == 1) {
-                                    //選択された要素を編集
-                                    arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
+                            try {
+                                if (dialogEdit.getText().toString().length() != 0) {
+                                    float second = Float.parseFloat(dialogEdit.getText().toString());
+                                    if (NUM == 0) {
+                                        arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
+                                    } else if (NUM == 1) {
+                                        //選択された要素を編集
+                                        arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
+                                    }
+                                    setList();
                                 }
-                                setList();
+                            }catch(Exception e){
+
                             }
                         }
                     })
