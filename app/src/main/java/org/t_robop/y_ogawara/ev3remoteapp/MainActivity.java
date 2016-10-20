@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         handler.sendEmptyMessage(1);
     }
 };
-
+    BluetoothAdapter mBtAdapter;
     //定数宣言
     final int STOP = 0;
     final int FRONT = 1;
@@ -117,6 +117,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     //命令ボタン処理
     public void command(View v) {
         if (String.valueOf(com.getText()).equals("実行")) {
+            //ev3未接続時に落ちないように
+            if (mBtAdapter == null){
+                Toast.makeText(this, "接続ボタンを押してね！", Toast.LENGTH_LONG).show();
+                return;
+            }
             if (arrayListRun.size() != 0) {
                 //リストの要素の保存
                 saveArray(arrayListRun,"array",this);
@@ -243,8 +248,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
     //接続ボタン処理
     public void connect(View v) {
-        BluetoothAdapter mBtAdapter = null;
+        //BluetoothAdapter mBtAdapter;
 
+//        if (mBtAdapter == null){
+//
+//        }else if (){
+//
+//        }
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
@@ -257,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             Toast.makeText(this, "接続成功！", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
+            //接続が失敗したらnullに
+            mBtAdapter = null;
         }
 
         // キーボードを強制的に隠せてない
@@ -483,8 +495,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                 String item = (String) listView.getItemAtPosition(pos);
 
                 //秒数取得
-                float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9]", ""));
-                ret = ret/10;
+                float ret = Float.parseFloat(item.substring(2 - 1).replaceAll("[^0-9+\\.]", ""));
                 //数値がある時(安全設計)
                 if(String.valueOf(ret)!="") {
                     //ダイアログ内のedittextに貼る
