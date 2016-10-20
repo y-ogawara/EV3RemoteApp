@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     Button back;
     Button left;
     Button right;
+    //スピナー
+    Spinner spinner;
     //レイアウト
     LinearLayout linearLayout;
 
@@ -123,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         back =(Button)findViewById(R.id.back);
         left =(Button)findViewById(R.id.left);
         right =(Button)findViewById(R.id.right);
+        spinner =(Spinner)findViewById(R.id.spinner);
 
         setListClick();
 
@@ -172,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         back.setVisibility(View.INVISIBLE);
         left.setVisibility(View.INVISIBLE);
         right.setVisibility(View.INVISIBLE);
+        //スピナーの無効
+        spinner.setVisibility(View.INVISIBLE);
     }
     public void offFilter(){
         //暗転解除
@@ -183,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         back.setVisibility(View.VISIBLE);
         left.setVisibility(View.VISIBLE);
         right.setVisibility(View.VISIBLE);
+        //スピナーの有効
+        spinner.setVisibility(View.VISIBLE);
     }
     //リセットボタンの処理
     public void reset(View v) {
