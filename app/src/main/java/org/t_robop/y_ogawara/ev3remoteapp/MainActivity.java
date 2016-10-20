@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //指定時間だけ画面の処理を止める
     public void sendBluetooth(float num,int event){
-        num = num*100;
+        num = num*1000;
 
         //ここで信号をEV3に送信
         try {
@@ -566,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             String listItem = String.valueOf(arrayListRun.get(0));
 
             //秒数取得
-            float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
+            float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9+\\.]", ""));
 
             listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
 
