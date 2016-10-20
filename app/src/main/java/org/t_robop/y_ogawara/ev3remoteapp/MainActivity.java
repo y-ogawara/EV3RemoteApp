@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             e.printStackTrace();
         }
         //ここで指定時間後に
-        handler.postDelayed(runnable, (long)num);
+        handler.postDelayed(runnable, (int)num);
     }
 
     //送信データの生成
@@ -519,6 +519,18 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
             }
         });
+
+        //長押し時
+        listRun.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
+
+                arrayListRun.remove(position);
+                setList();
+
+                return true;
+                }
+        });
     }
 
     //先頭から数えた文字数を取得するメソッド
@@ -563,6 +575,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
             //秒数取得
             float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
+            ret = ret/10;
 
             listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
 
