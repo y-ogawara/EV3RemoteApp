@@ -80,7 +80,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     //ダイアログ内のTextView(こいつを弄ることで何処からでもダイアログ内のTextViewを弄れるゾ！)
     TextView dialogText;
 
+    /**ボタン・スピナー関連**/
     Button com;
+    Button connect;
+    Button front;
+    Button back;
+    Button left;
+    Button right;
+    //レイアウト
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +115,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //ダイアログ内の関連付け
         dialogEdit =(EditText)inputView.findViewById(R.id.dialog_edit);
         dialogText=(TextView)inputView.findViewById(R.id.dialog_text);
+        //ボタン・スピナーの関連付け
         com = (Button) findViewById(R.id.com);
+        linearLayout=(LinearLayout) findViewById(R.id.rightScreen);
+        connect =(Button)findViewById(R.id.connect);
+        front =(Button)findViewById(R.id.front);
+        back =(Button)findViewById(R.id.back);
+        left =(Button)findViewById(R.id.left);
+        right =(Button)findViewById(R.id.right);
 
         setListClick();
 
@@ -150,14 +165,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     public void onFilter(){
         //暗転
-        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
         linearLayout.setBackgroundColor(Color.parseColor("#424242"));
         //ボタンの無効
-        Button connect =(Button)findViewById(R.id.connect);
-        Button front =(Button)findViewById(R.id.front);
-        Button back =(Button)findViewById(R.id.back);
-        Button left =(Button)findViewById(R.id.left);
-        Button right =(Button)findViewById(R.id.right);
         connect.setVisibility(View.INVISIBLE);
         front.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
@@ -166,14 +175,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
     public void offFilter(){
         //暗転解除
-        LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
         linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
         //ボタンの有効
-        Button connect =(Button)findViewById(R.id.connect);
-        Button front =(Button)findViewById(R.id.front);
-        Button back =(Button)findViewById(R.id.back);
-        Button left =(Button)findViewById(R.id.left);
-        Button right =(Button)findViewById(R.id.right);
         connect.setVisibility(View.VISIBLE);
         connect.setVisibility(View.VISIBLE);
         front.setVisibility(View.VISIBLE);
