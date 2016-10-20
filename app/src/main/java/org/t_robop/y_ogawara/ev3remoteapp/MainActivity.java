@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     EditText dialogEdit;
     //ダイアログ内のTextView(こいつを弄ることで何処からでもダイアログ内のTextViewを弄れるゾ！)
     TextView dialogText;
-
-
+    
     Button com;
 
     @Override
