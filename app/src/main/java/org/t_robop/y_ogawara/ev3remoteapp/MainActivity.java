@@ -177,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         right.setVisibility(View.INVISIBLE);
         //スピナーの無効
         spinner.setVisibility(View.INVISIBLE);
+        //リストの操作無効
+        listRun.setEnabled(false);
     }
     public void offFilter(){
         //暗転解除
@@ -190,6 +192,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         right.setVisibility(View.VISIBLE);
         //スピナーの有効
         spinner.setVisibility(View.VISIBLE);
+        //リストの操作有効
+        listRun.setEnabled(true);
     }
     //リセットボタンの処理
     public void reset(View v) {
