@@ -148,11 +148,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         LinearLayout linearLayout =(LinearLayout)findViewById(R.id.rightScreen);
         linearLayout.setBackgroundColor(Color.parseColor("#424242"));
         //ボタンの無効
+      //  ListView listView =(ListView)findViewById(R.id.list_run) ;
         Button connect =(Button)findViewById(R.id.connect);
         Button front =(Button)findViewById(R.id.front);
         Button back =(Button)findViewById(R.id.back);
         Button left =(Button)findViewById(R.id.left);
         Button right =(Button)findViewById(R.id.right);
+       // listView.setVisibility(View.INVISIBLE);
         connect.setVisibility(View.INVISIBLE);
         front.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
