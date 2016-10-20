@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //指定時間だけ画面の処理を止める
     public void sendBluetooth(float num,int event){
-        num = num*1000;
+        num = num*100;
 
         //ここで信号をEV3に送信
         try {
