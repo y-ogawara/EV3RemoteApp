@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //ダイアログ内の関連付け
         dialogEdit =(EditText)inputView.findViewById(R.id.dialog_edit);
         dialogText=(TextView)inputView.findViewById(R.id.dialog_text);
+        //ダイアログ内のボタンとも関連付けさせるよ！
+
         //ボタン・スピナーの関連付け
         com = (Button) findViewById(R.id.com);
         linearLayout=(LinearLayout) findViewById(R.id.rightScreen);
@@ -164,6 +166,34 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             //華麗に復活
             Iwillbeback();
         }
+    }
+
+    //ダイアログ内のボタンイベント
+    public void dialog_num(View v){
+        //Stringで取得とか描画とかやって、あとでまとめてfloat型にします
+        //一時保存用String型
+        String temp;
+        //EditTextに何か入ってる時(不具合防止)
+        if(dialogEdit.getText().length()!=0) {
+            //一旦取得
+            temp = dialogEdit.getText().toString();
+        }
+        //何も無かったら空白で取得
+        else{
+            temp="";
+        }
+        //削除ボタンが押された時
+        if (String.valueOf(v.getTag()).equals("btn_back")){
+            //一文字減らす
+            temp=temp.substring(0, temp.length()-1);
+        }
+        //数字の時
+        else{
+            //タグを取得して貼り付け
+            temp=temp+String.valueOf(v.getTag());
+        }
+        //セット
+        dialogEdit.setText(temp);
     }
 
     public void onFilter(){
