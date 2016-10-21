@@ -184,16 +184,22 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         }
         //削除ボタンが押された時
         if (String.valueOf(v.getTag()).equals("btn_back")){
-            //一文字減らす
-            temp=temp.substring(0, temp.length()-1);
+            //EditTextに何か入ってる時(再度不具合防止)
+            if(dialogEdit.getText().length()!=0) {
+                //一文字減らす
+                temp = temp.substring(0, temp.length() - 1);
+            }
         }
         //数字の時
         else{
             //タグを取得して貼り付け
             temp=temp+String.valueOf(v.getTag());
         }
-        //セット
-        dialogEdit.setText(temp);
+        //.のみはダメ
+        if(!temp.equals(".")) {
+            //セット
+            dialogEdit.setText(temp);
+        }
     }
 
     public void onFilter(){
