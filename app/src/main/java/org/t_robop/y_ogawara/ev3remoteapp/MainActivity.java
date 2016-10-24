@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
     public void offFilter(){
         //暗転解除
-        linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        linearLayout.setBackgroundColor(Color.parseColor("#e6e6fa"));
         //ボタンの有効
         connect.setVisibility(View.VISIBLE);
         connect.setVisibility(View.VISIBLE);
@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     public void reset(View v){
         if(arrayListRun.size()!=0) {
             alertDlg2 = new AlertDialog.Builder(MainActivity.this)                       //ダイアログの生成
+
                     .setTitle("WARNING!!!")
                     .setMessage("本当にリセットしてもいいですか？")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -633,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             //秒数取得
             float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9+\\.]", ""));
 
-            listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
+            listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#89ff8d"));
 
             //要素の前からに文字を取得
             switch (getWords(listItem, 2)) {
