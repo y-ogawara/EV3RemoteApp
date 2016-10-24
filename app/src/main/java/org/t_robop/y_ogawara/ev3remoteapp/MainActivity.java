@@ -268,15 +268,19 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
-                            if (dialogEdit.getText().toString().length() != 0) {
-                                float second = Float.parseFloat(dialogEdit.getText().toString());
-                                if (NUM == 0) {
-                                    arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
-                                } else if (NUM == 1) {
-                                    //選択された要素を編集
-                                    arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
+                            try {
+                                if (dialogEdit.getText().toString().length() != 0) {
+                                    float second = Float.parseFloat(dialogEdit.getText().toString());
+                                    if (NUM == 0) {
+                                        arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
+                                    } else if (NUM == 1) {
+                                        //選択された要素を編集
+                                        arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
+                                    }
+                                    setList();
                                 }
-                                setList();
+                            }catch(Exception e){
+
                             }
                         }
                     })
@@ -362,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 
     //指定時間だけ画面の処理を止める
     public void sendBluetooth(float num,int event){
-        num = num*100;
+        num = num*1000;
 
         //ここで信号をEV3に送信
         try {
@@ -610,8 +614,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             String listItem = String.valueOf(arrayListRun.get(0));
 
             //秒数取得
-            float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9]", ""));
-            ret = ret/10;
+            float ret = Float.parseFloat(listItem.substring(2 - 1).replaceAll("[^0-9+\\.]", ""));
 
             listRun.getChildAt(0).setBackgroundColor(Color.parseColor("#00ff00"));
 
