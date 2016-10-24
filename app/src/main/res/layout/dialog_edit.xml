@@ -5,27 +5,160 @@
     android:orientation="vertical"
     android:id="@+id/main_line">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/dialog_text"
-        android:layout_weight="1"
-        android:focusable="true"
-        android:focusableInTouchMode="true"/>
+        android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="numberDecimal"
-            android:hint="秒数指定"
-            android:maxLength="4"
-            android:id="@+id/dialog_edit"
-            android:layout_weight="1" />
+            android:id="@+id/dialog_text"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
-    </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:hint="秒数指定"
+                android:maxLength="8"
+                android:id="@+id/dialog_edit"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="1"
+                android:tag="1"
+                android:id="@+id/dialog_button_1"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="2"
+                android:tag="2"
+                android:id="@+id/dialog_button_2"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="3"
+                android:tag="3"
+                android:id="@+id/dialog_button_3"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="4"
+                android:tag="4"
+                android:id="@+id/dialog_button_4"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="5"
+                android:tag="5"
+                android:id="@+id/dialog_button_5"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="6"
+                android:tag="6"
+                android:id="@+id/dialog_button_6"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="7"
+                android:tag="7"
+                android:id="@+id/dialog_button_7"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="8"
+                android:tag="8"
+                android:id="@+id/dialog_button_8"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="9"
+                android:tag="9"
+                android:id="@+id/dialog_button_9"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="←"
+                android:tag="btn_back"
+                android:id="@+id/dialog_button_back"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0"
+                android:tag="0"
+                android:id="@+id/dialog_button_0"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="."
+                android:tag="."
+                android:id="@+id/dialog_button_do"
+                android:onClick="dialog_num"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
