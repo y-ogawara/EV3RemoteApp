@@ -131,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         right =(Button)findViewById(R.id.right);
         spinner =(Spinner)findViewById(R.id.spinner);
 
+        //toolbar設定
+
+
         setListClick();
 
         setDialog();
