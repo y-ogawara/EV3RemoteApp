@@ -5,18 +5,6 @@
     android:background="#e6e6fa"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_weight="0"
-        android:theme="@style/AppTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:longClickable="false">
-    </android.support.v7.widget.Toolbar>
-
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"

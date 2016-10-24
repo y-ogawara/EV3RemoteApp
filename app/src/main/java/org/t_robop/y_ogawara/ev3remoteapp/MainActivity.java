@@ -11,7 +11,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -132,12 +136,49 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         spinner =(Spinner)findViewById(R.id.spinner);
 
         //toolbar設定
+        // @Override
 
 
         setListClick();
 
         setDialog();
 
+    }
+    public boolean onOptionsItemClick(Menu menu) {
+        MenuInflater inf = getMenuInflater();
+        inf.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    public boolean onOptionsItem(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+                BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
+
+                AndroidComm.getInstance().setDevice(device); // Set device
+
+// Connect to EV3
+                try {
+                    EV3Command.open();
+                    Toast.makeText(MainActivity.this, "接続成功！", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, "エラーです", Toast.LENGTH_LONG).show();
+                    //接続が失敗したらnullに
+                    mBtAdapter = null;
+                }
+
+//                  // キーボードを強制的に隠せてない
+//                  if (item != null) {
+//                  InputMethodManager inputMethodManager = (InputMethodManager) MainActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                  inputMethodManager.hideSoftInputFromWindow(item.getWindowToken(), 0);
+//              }
+
+                break;
+            default:
+                break;
+        }
+        return true;
     }
     //命令ボタン処理
     public void command(View v) {
@@ -329,27 +370,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
 //        }else if (){
 //
 //        }
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        BluetoothDevice device = mBtAdapter.getRemoteDevice(macAddress);
-
-        AndroidComm.getInstance().setDevice(device); // Set device
-
-// Connect to EV3
-        try {
-            EV3Command.open();
-            Toast.makeText(this, "接続成功！", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "エラーです", Toast.LENGTH_LONG).show();
-            //接続が失敗したらnullに
-            mBtAdapter = null;
-        }
-
-        // キーボードを強制的に隠せてない
-        if (v != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
 
 
     }
