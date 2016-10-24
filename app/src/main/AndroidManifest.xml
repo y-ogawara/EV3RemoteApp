@@ -16,16 +16,17 @@
         <activity
         android:name=".MainActivity"
         android:screenOrientation="landscape"
-        android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".debugIntentActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:windowSoftInputMode="adjustNothing">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
         </activity>
-        <activity android:name=".ButtonActivity" />
-        <activity android:name=".RunListActivity" />
+
+
         <!--サービスを定義しないとstartService出来ません-->
     </application>
 
