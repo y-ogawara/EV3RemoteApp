@@ -273,13 +273,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                                     float second = Float.parseFloat(dialogEdit.getText().toString());
                                     if(second > 0) {
                                         if (NUM == 0) {
+                                            touchPos=arrayListRun.size();
                                             arrayListRun.add(action + "【" + String.valueOf(second) + "秒】");
                                         } else if (NUM == 1) {
                                             //選択された要素を編集
                                             arrayListRun.set(touchPos, dialogText.getText().toString() + "【" + String.valueOf(second) + "秒】");
                                         }
                                     }
-                                    setList();
+                                    setList(touchPos);
                                 }
                             }catch(Exception e){
 
@@ -488,11 +489,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     }
 
     //List更新処理(ArrayListの情報をadapter&listに反映すっぞ)
-    public void setList(){
+    public void setList(int pos){
         //アダプターの更新
         adapterRun=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListRun);
         //アダプターセット
         listRun.setAdapter(adapterRun);
+        //移動するポジション指定
+        listRun.setSelection(pos);
     }
 
     //新規追加用に一度edittextをクリーンできるメソッド
@@ -520,7 +523,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     public void listResetMethod(){
         //リスト全消し
         arrayListRun.clear();
-        setList();
+        setList(0);
     }
 
     //タイトルと設定した数字でダイアログが表示されます
@@ -568,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
 
                 arrayListRun.remove(position);
-                setList();
+                setList(position);
 
                 return true;
                 }
@@ -653,7 +656,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             arrayListRun.add(arrayList[n]);
         }
         //リスト復活(リストの要素データはArrayListに入ってる)
-        setList();
+        setList(0);
         //テキストを「実行」に変更
         com.setText("実行");
         com.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_run));
