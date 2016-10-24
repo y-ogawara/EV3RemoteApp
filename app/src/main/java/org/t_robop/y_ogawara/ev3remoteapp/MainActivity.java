@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     /**ダイアログ設定関連**/
     //ダイアログ
     AlertDialog alertDlg;
+    //警告ダイアログ
+    AlertDialog alertDlg2;
     //ダイアログ内の処理分け用グローバル変数(0:追加処理,1:編集処理)
     int NUM;
 
@@ -231,12 +233,25 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //リストの操作有効
         listRun.setEnabled(true);
     }
-    //リセットボタンの処理
-    public void reset(View v) {
-        //リスト全消し
-        listResetMethod();
-    }
 
+    //リセットするときの警告ダイアログ
+    public void reset(View v){
+        if(arrayListRun.size()!=0) {
+            alertDlg2 = new AlertDialog.Builder(MainActivity.this)                       //ダイアログの生成
+                    .setTitle("WARNING!!!")
+                    .setMessage("本当にリセットしてもいいですか？")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //リスト全消し
+                            listResetMethod();
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
+
+    }
 
     //移動ボタン処理
     public void move(View v) {
@@ -663,6 +678,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         Button reset =(Button) findViewById(R.id.reset);
         reset.setEnabled(true);
         reset.setBackgroundDrawable(getResources().getDrawable(R.drawable.color_reset));
+
     }
     void cancel(){
         //念のためハンドラを終了
