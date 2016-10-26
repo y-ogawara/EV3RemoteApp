@@ -89,14 +89,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/connect"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/color_connect"
-                        android:onClick="connect"
-                        android:text="接続"
-                        android:textSize="25dp" />
+
                 </LinearLayout>
 
                 <LinearLayout

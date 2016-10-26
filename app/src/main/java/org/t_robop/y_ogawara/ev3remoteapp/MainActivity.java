@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //ボタン・スピナーの関連付け
         com = (Button) findViewById(R.id.com);
         linearLayout=(LinearLayout) findViewById(R.id.rightScreen);
-        connect =(Button)findViewById(R.id.connect);
         front =(Button)findViewById(R.id.front);
         back =(Button)findViewById(R.id.back);
         left =(Button)findViewById(R.id.left);
