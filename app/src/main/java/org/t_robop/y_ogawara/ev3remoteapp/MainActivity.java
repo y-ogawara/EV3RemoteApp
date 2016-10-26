@@ -144,12 +144,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         setDialog();
 
     }
-    public boolean onOptionsItemClick(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inf = getMenuInflater();
         inf.inflate(R.menu.menu_main, menu);
         return true;
     }
-    public boolean onOptionsItem(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected    (MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 mBtAdapter = BluetoothAdapter.getDefaultAdapter();
