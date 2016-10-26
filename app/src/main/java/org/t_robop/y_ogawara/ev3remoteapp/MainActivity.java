@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
                                     setList(touchPos);
                                 }
                             }catch(Exception e){
-
+                                Toast.makeText(MainActivity.this, "不正な値です！", Toast.LENGTH_LONG).show();
                             }
                         }
                     })
