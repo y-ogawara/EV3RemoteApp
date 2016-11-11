@@ -11,17 +11,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //暗転
         linearLayout.setBackgroundColor(Color.parseColor("#424242"));
         //ボタンの無効
-        connect.setVisibility(View.INVISIBLE);
+        //connect.setVisibility(View.INVISIBLE);
         front.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
         left.setVisibility(View.INVISIBLE);
@@ -267,8 +265,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         //暗転解除
         linearLayout.setBackgroundColor(Color.parseColor("#e6e6fa"));
         //ボタンの有効
-        connect.setVisibility(View.VISIBLE);
-        connect.setVisibility(View.VISIBLE);
+        //connect.setVisibility(View.VISIBLE);
+        //connect.setVisibility(View.VISIBLE);
         front.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         left.setVisibility(View.VISIBLE);
@@ -436,93 +434,93 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         if (num == 0) {   //Stop Motors at PortC & D
             tele[7] = (byte)0xA4;     //OUTPUT_POWER
             tele[8] = (byte)0;
-            tele[9] = (byte)4;     //Motor ID = PortC
+            tele[9] = (byte)2;     //Motor ID = PortC
             tele[10] = (byte)0;     //Motor Power
             tele[11] = (byte)0xA6;    //OUTPUT_START
             tele[12] = (byte)0;
-            tele[13] = (byte)4;     //Motor ID = PortC
+            tele[13] = (byte)2;     //Motor ID = PortC
 
             tele[14] = (byte)0xA4;     //OUTPUT_POWER
             tele[15] = (byte)0;
-            tele[16] = (byte)8;     //Motor ID = PortD
+            tele[16] = (byte)4;     //Motor ID = PortD
             tele[17] = (byte)0;     //Motor Power
             tele[18] = (byte)0xA6;    //OUTPUT_START
             tele[19] = (byte)0;
-            tele[20] = (byte)8;     //Motor ID = PortD
+            tele[20] = (byte)4;     //Motor ID = PortD
         }
 
         //進むとき
         if (num == 1) {    //Forward Motors at PortC & D
             tele[7] = (byte)0xA4;
             tele[8] = (byte)0x00;
-            tele[9] = (byte)4;
+            tele[9] = (byte)2;
             tele[10] = (byte)68;
             tele[11] = (byte)0xA6;
             tele[12] = (byte)0;
-            tele[13] = (byte)4;
+            tele[13] = (byte)2;
 
             tele[14] = (byte)0xA4;
             tele[15] = (byte)0x00;
-            tele[16] = (byte)8;
+            tele[16] = (byte)4;
             tele[17] = (byte)68;
             tele[18] = (byte)0xA6;
             tele[19] = (byte)0;
-            tele[20] = (byte)8;
+            tele[20] = (byte)4;
         }
         //バック
         if (num == 2) {    //Backward Motors at PortC & D
             tele[7] = (byte)0xA4;
             tele[8] = (byte)0x00;
-            tele[9] = (byte)4;
-            tele[10] = (byte)40;
+            tele[9] = (byte)2;
+            tele[10] = (byte)32;
             tele[11] = (byte)0xA6;
             tele[12] = (byte)0;
-            tele[13] = (byte)4;
+            tele[13] = (byte)2;
 
             tele[14] = (byte)0xA4;
             tele[15] = (byte)0x00;
-            tele[16] = (byte)8;
-            tele[17] = (byte)40;
+            tele[16] = (byte)4;
+            tele[17] = (byte)32;
             tele[18] = (byte)0xA6;
             tele[19] = (byte)0;
-            tele[20] = (byte)9;
+            tele[20] = (byte)4;
         }
 
         //右回転
         if (num == 3) {    //Turn Right = Forward Motor at PortC(Left) and Stop PortD(Right)
             tele[7] = (byte)0xA4;
             tele[8] = (byte)0x00;
-            tele[9] = (byte)4;
+            tele[9] = (byte)2;
             tele[10] = (byte)0;
             tele[11] = (byte)0xA6;
             tele[12] = (byte)0;
-            tele[13] = (byte)4;
+            tele[13] = (byte)2;
 
             tele[14] = (byte)0xA4;
             tele[15] = (byte)0x00;
-            tele[16] = (byte)8;
+            tele[16] = (byte)4;
             tele[17] = (byte)68;
             tele[18] = (byte)0xA6;
             tele[19] = (byte)0;
-            tele[20] = (byte)8;
+            tele[20] = (byte)4;
         }
         //左回転
         if (num == 4) {    //Turn Left = Forward Motor at PortD(Right) and Stop PortC(Left)
             tele[7] = (byte)0xA4;
             tele[8] = (byte)0x00;
-            tele[9] = (byte)4;
+            tele[9] = (byte)2;
             tele[10] = (byte)68;
             tele[11] = (byte)0xA6;
             tele[12] = (byte)0;
-            tele[13] = (byte)4;
+            tele[13] = (byte)2;
 
             tele[14] = (byte)0xA4;
             tele[15] = (byte)0x00;
-            tele[16] = (byte)8;
+            tele[16] = (byte)4;
             tele[17] = (byte)0;
             tele[18] = (byte)0xA6;
             tele[19] = (byte)0;
-            tele[20] = (byte)8;
+            tele[20] = (byte)4;
         }
         //byte配列を返す
         return tele;
